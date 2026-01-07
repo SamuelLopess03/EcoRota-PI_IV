@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../../generated/client/client.js";
+import { PrismaClient } from "../../../../prisma/generated/client/client.js";
 import { Administrator } from "../../../domain/entities/Administrator.js";
 import { AdministratorRepository } from "../../../domain/repositories/AdministratorRepository.js";
 
@@ -10,7 +10,7 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
       data: {
         name: data.name,
         email: data.email,
-        password: data.password || "", // Provide a default or handle validation before this
+        password: data.password || "",
       },
     });
 
