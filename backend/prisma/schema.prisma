@@ -15,5 +15,27 @@ model Administrador {
   creation_date DateTime @default(now())
   update_date   DateTime @updatedAt
 
+  created_routes Route[] @relation("RouteCreatedBy")
+  updated_routes Route[] @relation("RouteUpdatedBy")
+
   @@map("administradores")
+}
+
+model Route {
+  id              Int      @id @default(autoincrement())
+  name            String
+  days_of_week    String
+  collection_type String
+  start_time      DateTime
+  end_time        DateTime
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  admin_id_created Int
+  created_by       Administrador @relation("RouteCreatedBy", fields: [admin_id_created], references: [id])
+
+  admin_id_updated Int?
+  updated_by       Administrador? @relation("RouteUpdatedBy", fields: [admin_id_updated], references: [id])
+
+  @@map("routes")
 }
