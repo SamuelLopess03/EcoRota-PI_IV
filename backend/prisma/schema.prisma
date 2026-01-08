@@ -19,6 +19,8 @@ model Administrador {
   updated_routes        Route[]        @relation("RouteUpdatedBy")
   created_neighborhoods Neighborhood[] @relation("NeighborhoodCreatedBy")
   updated_neighborhoods Neighborhood[] @relation("NeighborhoodUpdatedBy")
+  created_ecopoints     Ecopoint[]     @relation("EcopointCreatedBy")
+  updated_ecopoints     Ecopoint[]     @relation("EcopointUpdatedBy")
 
   @@map("administradores")
 }
@@ -64,6 +66,7 @@ model Neighborhood {
   updated_by       Administrador? @relation("NeighborhoodUpdatedBy", fields: [admin_id_updated], references: [id])
 
   subscribers Subscriber[]
+  ecopoints   Ecopoint[]
 
   @@map("neighborhoods")
 }
@@ -80,4 +83,27 @@ model Subscriber {
 
   @@index([neighborhood_id])
   @@map("subscribers")
+}
+
+model Ecopoint {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  address            String
+  accepted_materials String
+  collection_days    String
+  collection_time    String
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  neighborhood_id Int
+  neighborhood    Neighborhood @relation(fields: [neighborhood_id], references: [id])
+
+  admin_id_created Int
+  created_by       Administrador @relation("EcopointCreatedBy", fields: [admin_id_created], references: [id])
+
+  admin_id_updated Int?
+  updated_by       Administrador? @relation("EcopointUpdatedBy", fields: [admin_id_updated], references: [id])
+
+  @@index([neighborhood_id])
+  @@map("ecopoints")
 }
