@@ -1,8 +1,10 @@
+import { Address } from "../value-objects/Address.js";
+
 export class Ecopoint {
     constructor(
         public readonly id: number,
         public name: string,
-        public address: string,
+        public address: Address,
         public accepted_materials: string,
         public collection_days: string,
         public collection_time: string,
