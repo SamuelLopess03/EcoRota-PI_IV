@@ -1,9 +1,11 @@
+import { AcceptedMaterials } from "../value-objects/AcceptedMaterials.js";
+
 export class Ecopoint {
     constructor(
         public readonly id: number,
         public name: string,
         public address: string,
-        public accepted_materials: string,
+        public accepted_materials: AcceptedMaterials,
         public collection_days: string,
         public collection_time: string,
         public neighborhood_id: number,
