@@ -1,6 +1,7 @@
 import { PrismaClient } from "../../../../prisma/generated/client/client.js";
 import { Neighborhood } from "../../../domain/entities/Neighborhood.js";
 import { NeighborhoodRepository } from "../../../domain/repositories/NeighborhoodRepository.js";
+import { GeoLocation } from "../../../domain/value-objects/GeoLocation.js";
 
 export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
     constructor(private prisma: PrismaClient) { }
@@ -9,8 +10,8 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
         const createdNeighborhood = await this.prisma.neighborhood.create({
             data: {
                 name: data.name,
-                latitude: data.latitude,
-                longitude: data.longitude,
+                latitude: data.geoLocation.getLatitude(),
+                longitude: data.geoLocation.getLongitude(),
                 cep: data.cep,
                 population_estimate: data.population_estimate,
                 route_id: data.route_id,
@@ -22,8 +23,7 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
         return new Neighborhood(
             createdNeighborhood.id,
             createdNeighborhood.name,
-            createdNeighborhood.latitude,
-            createdNeighborhood.longitude,
+            new GeoLocation(createdNeighborhood.latitude, createdNeighborhood.longitude),
             createdNeighborhood.cep,
             createdNeighborhood.population_estimate,
             createdNeighborhood.created_at,
@@ -44,8 +44,7 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
         return new Neighborhood(
             neighborhood.id,
             neighborhood.name,
-            neighborhood.latitude,
-            neighborhood.longitude,
+            new GeoLocation(neighborhood.latitude, neighborhood.longitude),
             neighborhood.cep,
             neighborhood.population_estimate,
             neighborhood.created_at,
@@ -64,8 +63,7 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
                 new Neighborhood(
                     neighborhood.id,
                     neighborhood.name,
-                    neighborhood.latitude,
-                    neighborhood.longitude,
+                    new GeoLocation(neighborhood.latitude, neighborhood.longitude),
                     neighborhood.cep,
                     neighborhood.population_estimate,
                     neighborhood.created_at,
@@ -87,8 +85,7 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
                 new Neighborhood(
                     neighborhood.id,
                     neighborhood.name,
-                    neighborhood.latitude,
-                    neighborhood.longitude,
+                    new GeoLocation(neighborhood.latitude, neighborhood.longitude),
                     neighborhood.cep,
                     neighborhood.population_estimate,
                     neighborhood.created_at,
@@ -105,8 +102,8 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
             where: { id },
             data: {
                 name: data.name,
-                latitude: data.latitude,
-                longitude: data.longitude,
+                latitude: data.geoLocation?.getLatitude(),
+                longitude: data.geoLocation?.getLongitude(),
                 cep: data.cep,
                 population_estimate: data.population_estimate,
                 route_id: data.route_id,
@@ -117,8 +114,7 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
         return new Neighborhood(
             updatedNeighborhood.id,
             updatedNeighborhood.name,
-            updatedNeighborhood.latitude,
-            updatedNeighborhood.longitude,
+            new GeoLocation(updatedNeighborhood.latitude, updatedNeighborhood.longitude),
             updatedNeighborhood.cep,
             updatedNeighborhood.population_estimate,
             updatedNeighborhood.created_at,

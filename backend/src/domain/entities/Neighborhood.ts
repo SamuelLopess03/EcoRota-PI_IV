@@ -1,9 +1,10 @@
+import { GeoLocation } from "../value-objects/GeoLocation.js";
+
 export class Neighborhood {
   constructor(
     public readonly id: number,
     public name: string,
-    public latitude: number,
-    public longitude: number,
+    public geoLocation: GeoLocation,
     public cep: string,
     public population_estimate: number | null,
     public readonly created_at: Date,

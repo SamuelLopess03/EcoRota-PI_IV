@@ -1,12 +1,12 @@
 import { InvalidAddressError } from "../errors/InvalidAddressError.js";
+import { GeoLocation } from "./GeoLocation.js";
 
 export interface AddressProps {
     street: string;
     number?: string;
     complement?: string;
     postalCode?: string;
-    latitude?: number;
-    longitude?: number;
+    geoLocation?: GeoLocation;
 }
 
 export class Address {
@@ -14,8 +14,7 @@ export class Address {
     private readonly number?: string;
     private readonly complement?: string;
     private readonly postalCode?: string;
-    private readonly latitude?: number;
-    private readonly longitude?: number;
+    private readonly geoLocation?: GeoLocation;
 
     constructor(props: AddressProps) {
         this.validate(props);
@@ -24,8 +23,7 @@ export class Address {
         this.number = props.number?.trim();
         this.complement = props.complement?.trim();
         this.postalCode = props.postalCode?.trim();
-        this.latitude = props.latitude;
-        this.longitude = props.longitude;
+        this.geoLocation = props.geoLocation;
     }
 
     private validate(props: AddressProps): void {
@@ -38,41 +36,6 @@ export class Address {
         if (!props.number || props.number.trim().length === 0) {
             throw new InvalidAddressError("O número é obrigatório");
         }
-
-        // Validar coordenadas se presentes
-        if (props.latitude !== undefined) {
-            if (!this.isValidLatitude(props.latitude)) {
-                throw new InvalidAddressError(
-                    `Latitude inválida: ${props.latitude}. Deve estar entre -90 e 90`
-                );
-            }
-        }
-
-        if (props.longitude !== undefined) {
-            if (!this.isValidLongitude(props.longitude)) {
-                throw new InvalidAddressError(
-                    `Longitude inválida: ${props.longitude}. Deve estar entre -180 e 180`
-                );
-            }
-        }
-
-        // Se uma coordenada está presente, a outra também deve estar
-        if (
-            (props.latitude !== undefined && props.longitude === undefined) ||
-            (props.latitude === undefined && props.longitude !== undefined)
-        ) {
-            throw new InvalidAddressError(
-                "Latitude e longitude devem ser fornecidas juntas"
-            );
-        }
-    }
-
-    private isValidLatitude(lat: number): boolean {
-        return lat >= -90 && lat <= 90;
-    }
-
-    private isValidLongitude(lng: number): boolean {
-        return lng >= -180 && lng <= 180;
     }
 
     // Getters para acessar os valores (imutabilidade)
@@ -92,12 +55,8 @@ export class Address {
         return this.postalCode;
     }
 
-    public getLatitude(): number | undefined {
-        return this.latitude;
-    }
-
-    public getLongitude(): number | undefined {
-        return this.longitude;
+    public getGeoLocation(): GeoLocation | undefined {
+        return this.geoLocation;
     }
 
     // Método para obter endereço completo como string
@@ -116,8 +75,8 @@ export class Address {
     }
 
     // Método para verificar se tem coordenadas
-    public hasCoordinates(): boolean {
-        return this.latitude !== undefined && this.longitude !== undefined;
+    public hasGeoLocation(): boolean {
+        return this.geoLocation !== undefined;
     }
 
     // Método equals para comparar dois endereços
@@ -126,13 +85,16 @@ export class Address {
             return false;
         }
 
+        const geoLocationEquals = 
+            (this.geoLocation === undefined && other.geoLocation === undefined) ||
+            (this.geoLocation !== undefined && other.geoLocation !== undefined && this.geoLocation.equals(other.geoLocation));
+
         return (
             this.street === other.street &&
             this.number === other.number &&
             this.complement === other.complement &&
             this.postalCode === other.postalCode &&
-            this.latitude === other.latitude &&
-            this.longitude === other.longitude
+            geoLocationEquals
         );
     }
 
@@ -143,8 +105,7 @@ export class Address {
             number: changes.number ?? this.number,
             complement: changes.complement ?? this.complement,
             postalCode: changes.postalCode ?? this.postalCode,
-            latitude: changes.latitude ?? this.latitude,
-            longitude: changes.longitude ?? this.longitude,
+            geoLocation: changes.geoLocation ?? this.geoLocation,
         });
     }
 }
