@@ -1,18 +1,32 @@
 import { PrismaClient } from "../../../../prisma/generated/client/client.js";
 import { Ecopoint } from "../../../domain/entities/Ecopoint.js";
 import { EcopointRepository } from "../../../domain/repositories/EcopointRepository.js";
+import { CollectionTime } from "../../../domain/value-objects/CollectionTime.js";
+import { AcceptedMaterials } from "../../../domain/value-objects/AcceptedMaterials.js";
+import { Address } from "../../../domain/value-objects/Address.js";
+import { CollectionDays } from "../../../domain/value-objects/CollectionDays.js";
 
 export class PrismaEcopointRepository implements EcopointRepository {
     constructor(private prisma: PrismaClient) { }
+
+    private parseCollectionTime(timeString: string): CollectionTime {
+        const [startTime, endTime] = timeString.split(" - ");
+        return new CollectionTime(startTime.trim(), endTime.trim());
+    }
 
     async create(data: Omit<Ecopoint, "id" | "created_at" | "updated_at">): Promise<Ecopoint> {
         const createdEcopoint = await this.prisma.ecopoint.create({
             data: {
                 name: data.name,
-                address: data.address,
-                accepted_materials: data.accepted_materials,
-                collection_days: data.collection_days,
-                collection_time: data.collection_time,
+                street: data.address.getStreet(),
+                number: data.address.getNumber(),
+                complement: data.address.getComplement(),
+                postal_code: data.address.getPostalCode(),
+                latitude: data.address.getLatitude(),
+                longitude: data.address.getLongitude(),
+                accepted_materials: data.accepted_materials.toString(),
+                collection_days: data.collection_days.toString(),
+                collection_time: data.collection_time.getFormattedInterval(),
                 neighborhood_id: data.neighborhood_id,
                 admin_id_created: data.admin_id_created,
                 admin_id_updated: data.admin_id_updated,
@@ -22,10 +36,17 @@ export class PrismaEcopointRepository implements EcopointRepository {
         return new Ecopoint(
             createdEcopoint.id,
             createdEcopoint.name,
-            createdEcopoint.address,
-            createdEcopoint.accepted_materials,
-            createdEcopoint.collection_days,
-            createdEcopoint.collection_time,
+            AcceptedMaterials.fromString(createdEcopoint.accepted_materials),
+            new Address({
+                street: createdEcopoint.street,
+                number: createdEcopoint.number ?? undefined,
+                complement: createdEcopoint.complement ?? undefined,
+                postalCode: createdEcopoint.postal_code ?? undefined,
+                latitude: createdEcopoint.latitude ?? undefined,
+                longitude: createdEcopoint.longitude ?? undefined,
+            }),
+            CollectionDays.fromString(createdEcopoint.collection_days),
+            this.parseCollectionTime(createdEcopoint.collection_time),
             createdEcopoint.neighborhood_id,
             createdEcopoint.admin_id_created,
             createdEcopoint.admin_id_updated,
@@ -44,10 +65,17 @@ export class PrismaEcopointRepository implements EcopointRepository {
         return new Ecopoint(
             ecopoint.id,
             ecopoint.name,
-            ecopoint.address,
-            ecopoint.accepted_materials,
-            ecopoint.collection_days,
-            ecopoint.collection_time,
+            AcceptedMaterials.fromString(ecopoint.accepted_materials),
+            new Address({
+                street: ecopoint.street,
+                number: ecopoint.number ?? undefined,
+                complement: ecopoint.complement ?? undefined,
+                postalCode: ecopoint.postal_code ?? undefined,
+                latitude: ecopoint.latitude ?? undefined,
+                longitude: ecopoint.longitude ?? undefined,
+            }),
+            CollectionDays.fromString(ecopoint.collection_days),
+            this.parseCollectionTime(ecopoint.collection_time),
             ecopoint.neighborhood_id,
             ecopoint.admin_id_created,
             ecopoint.admin_id_updated,
@@ -64,10 +92,17 @@ export class PrismaEcopointRepository implements EcopointRepository {
                 new Ecopoint(
                     ecopoint.id,
                     ecopoint.name,
-                    ecopoint.address,
-                    ecopoint.accepted_materials,
-                    ecopoint.collection_days,
-                    ecopoint.collection_time,
+                    AcceptedMaterials.fromString(ecopoint.accepted_materials),
+                    new Address({
+                        street: ecopoint.street,
+                        number: ecopoint.number ?? undefined,
+                        complement: ecopoint.complement ?? undefined,
+                        postalCode: ecopoint.postal_code ?? undefined,
+                        latitude: ecopoint.latitude ?? undefined,
+                        longitude: ecopoint.longitude ?? undefined,
+                    }),
+                    CollectionDays.fromString(ecopoint.collection_days),
+                    this.parseCollectionTime(ecopoint.collection_time),
                     ecopoint.neighborhood_id,
                     ecopoint.admin_id_created,
                     ecopoint.admin_id_updated,
@@ -87,10 +122,17 @@ export class PrismaEcopointRepository implements EcopointRepository {
                 new Ecopoint(
                     ecopoint.id,
                     ecopoint.name,
-                    ecopoint.address,
-                    ecopoint.accepted_materials,
-                    ecopoint.collection_days,
-                    ecopoint.collection_time,
+                    AcceptedMaterials.fromString(ecopoint.accepted_materials),
+                    new Address({
+                        street: ecopoint.street,
+                        number: ecopoint.number ?? undefined,
+                        complement: ecopoint.complement ?? undefined,
+                        postalCode: ecopoint.postal_code ?? undefined,
+                        latitude: ecopoint.latitude ?? undefined,
+                        longitude: ecopoint.longitude ?? undefined,
+                    }),
+                    CollectionDays.fromString(ecopoint.collection_days),
+                    this.parseCollectionTime(ecopoint.collection_time),
                     ecopoint.neighborhood_id,
                     ecopoint.admin_id_created,
                     ecopoint.admin_id_updated,
@@ -105,10 +147,15 @@ export class PrismaEcopointRepository implements EcopointRepository {
             where: { id },
             data: {
                 name: data.name,
-                address: data.address,
-                accepted_materials: data.accepted_materials,
-                collection_days: data.collection_days,
-                collection_time: data.collection_time,
+                street: data.address?.getStreet(),
+                number: data.address?.getNumber(),
+                complement: data.address?.getComplement(),
+                postal_code: data.address?.getPostalCode(),
+                latitude: data.address?.getLatitude(),
+                longitude: data.address?.getLongitude(),
+                accepted_materials: data.accepted_materials?.toString(),
+                collection_days: data.collection_days?.toString(),
+                collection_time: data.collection_time?.getFormattedInterval(),
                 neighborhood_id: data.neighborhood_id,
                 admin_id_created: data.admin_id_created,
                 admin_id_updated: data.admin_id_updated,
@@ -118,10 +165,17 @@ export class PrismaEcopointRepository implements EcopointRepository {
         return new Ecopoint(
             updatedEcopoint.id,
             updatedEcopoint.name,
-            updatedEcopoint.address,
-            updatedEcopoint.accepted_materials,
-            updatedEcopoint.collection_days,
-            updatedEcopoint.collection_time,
+            AcceptedMaterials.fromString(updatedEcopoint.accepted_materials),
+            new Address({
+                street: updatedEcopoint.street,
+                number: updatedEcopoint.number ?? undefined,
+                complement: updatedEcopoint.complement ?? undefined,
+                postalCode: updatedEcopoint.postal_code ?? undefined,
+                latitude: updatedEcopoint.latitude ?? undefined,
+                longitude: updatedEcopoint.longitude ?? undefined,
+            }),
+            CollectionDays.fromString(updatedEcopoint.collection_days),
+            this.parseCollectionTime(updatedEcopoint.collection_time),
             updatedEcopoint.neighborhood_id,
             updatedEcopoint.admin_id_created,
             updatedEcopoint.admin_id_updated,

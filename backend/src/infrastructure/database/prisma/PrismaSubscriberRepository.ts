@@ -2,6 +2,7 @@ import { PrismaClient } from "../../../../prisma/generated/client/client.js";
 import { Subscriber } from "../../../domain/entities/Subscriber.js";
 import { SubscriberRepository } from "../../../domain/repositories/SubscriberRepository.js";
 import { Email } from "../../../domain/value-objects/Email.js";
+import { Address } from "../../../domain/value-objects/Address.js";
 
 export class PrismaSubscriberRepository implements SubscriberRepository {
     constructor(private prisma: PrismaClient) { }
@@ -10,7 +11,12 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
         const createdSubscriber = await this.prisma.subscriber.create({
             data: {
                 email: data.email.getValue(),
-                address: data.address,
+                street: data.address.getStreet(),
+                number: data.address.getNumber(),
+                complement: data.address.getComplement(),
+                postal_code: data.address.getPostalCode(),
+                latitude: data.address.getLatitude(),
+                longitude: data.address.getLongitude(),
                 neighborhood_id: data.neighborhood_id,
             },
         });
@@ -18,7 +24,14 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
         return new Subscriber(
             createdSubscriber.id,
             new Email(createdSubscriber.email),
-            createdSubscriber.address,
+            new Address({
+                street: createdSubscriber.street,
+                number: createdSubscriber.number ?? undefined,
+                complement: createdSubscriber.complement ?? undefined,
+                postalCode: createdSubscriber.postal_code ?? undefined,
+                latitude: createdSubscriber.latitude ?? undefined,
+                longitude: createdSubscriber.longitude ?? undefined,
+            }),
             createdSubscriber.neighborhood_id,
             createdSubscriber.created_at,
             createdSubscriber.updated_at
@@ -35,7 +48,14 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
         return new Subscriber(
             subscriber.id,
             new Email(subscriber.email),
-            subscriber.address,
+            new Address({
+                street: subscriber.street,
+                number: subscriber.number ?? undefined,
+                complement: subscriber.complement ?? undefined,
+                postalCode: subscriber.postal_code ?? undefined,
+                latitude: subscriber.latitude ?? undefined,
+                longitude: subscriber.longitude ?? undefined,
+            }),
             subscriber.neighborhood_id,
             subscriber.created_at,
             subscriber.updated_at
@@ -52,7 +72,14 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
         return new Subscriber(
             subscriber.id,
             new Email(subscriber.email),
-            subscriber.address,
+            new Address({
+                street: subscriber.street,
+                number: subscriber.number ?? undefined,
+                complement: subscriber.complement ?? undefined,
+                postalCode: subscriber.postal_code ?? undefined,
+                latitude: subscriber.latitude ?? undefined,
+                longitude: subscriber.longitude ?? undefined,
+            }),
             subscriber.neighborhood_id,
             subscriber.created_at,
             subscriber.updated_at
@@ -67,7 +94,14 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
                 new Subscriber(
                     subscriber.id,
                     new Email(subscriber.email),
-                    subscriber.address,
+                    new Address({
+                        street: subscriber.street,
+                        number: subscriber.number ?? undefined,
+                        complement: subscriber.complement ?? undefined,
+                        postalCode: subscriber.postal_code ?? undefined,
+                        latitude: subscriber.latitude ?? undefined,
+                        longitude: subscriber.longitude ?? undefined,
+                    }),
                     subscriber.neighborhood_id,
                     subscriber.created_at,
                     subscriber.updated_at
@@ -85,7 +119,14 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
                 new Subscriber(
                     subscriber.id,
                     new Email(subscriber.email),
-                    subscriber.address,
+                    new Address({
+                        street: subscriber.street,
+                        number: subscriber.number ?? undefined,
+                        complement: subscriber.complement ?? undefined,
+                        postalCode: subscriber.postal_code ?? undefined,
+                        latitude: subscriber.latitude ?? undefined,
+                        longitude: subscriber.longitude ?? undefined,
+                    }),
                     subscriber.neighborhood_id,
                     subscriber.created_at,
                     subscriber.updated_at
@@ -98,7 +139,12 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
             where: { id },
             data: {
                 email: data.email?.getValue(),
-                address: data.address,
+                street: data.address?.getStreet(),
+                number: data.address?.getNumber(),
+                complement: data.address?.getComplement(),
+                postal_code: data.address?.getPostalCode(),
+                latitude: data.address?.getLatitude(),
+                longitude: data.address?.getLongitude(),
                 neighborhood_id: data.neighborhood_id,
             },
         });
@@ -106,7 +152,14 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
         return new Subscriber(
             updatedSubscriber.id,
             new Email(updatedSubscriber.email),
-            updatedSubscriber.address,
+            new Address({
+                street: updatedSubscriber.street,
+                number: updatedSubscriber.number ?? undefined,
+                complement: updatedSubscriber.complement ?? undefined,
+                postalCode: updatedSubscriber.postal_code ?? undefined,
+                latitude: updatedSubscriber.latitude ?? undefined,
+                longitude: updatedSubscriber.longitude ?? undefined,
+            }),
             updatedSubscriber.neighborhood_id,
             updatedSubscriber.created_at,
             updatedSubscriber.updated_at

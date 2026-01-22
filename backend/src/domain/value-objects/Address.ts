@@ -2,7 +2,7 @@ import { InvalidAddressError } from "../errors/InvalidAddressError.js";
 
 export interface AddressProps {
     street: string;
-    number: string;
+    number?: string;
     complement?: string;
     postalCode?: string;
     latitude?: number;
@@ -11,7 +11,7 @@ export interface AddressProps {
 
 export class Address {
     private readonly street: string;
-    private readonly number: string;
+    private readonly number?: string;
     private readonly complement?: string;
     private readonly postalCode?: string;
     private readonly latitude?: number;
@@ -21,7 +21,7 @@ export class Address {
         this.validate(props);
 
         this.street = props.street.trim();
-        this.number = props.number.trim();
+        this.number = props.number?.trim();
         this.complement = props.complement?.trim();
         this.postalCode = props.postalCode?.trim();
         this.latitude = props.latitude;
@@ -80,7 +80,7 @@ export class Address {
         return this.street;
     }
 
-    public getNumber(): string {
+    public getNumber(): string | undefined {
         return this.number;
     }
 

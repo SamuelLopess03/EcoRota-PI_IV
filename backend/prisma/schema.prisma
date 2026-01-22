@@ -75,7 +75,12 @@ model Neighborhood {
 model Subscriber {
   id         Int      @id @default(autoincrement())
   email      String   @unique
-  address    String
+  street     String
+  number     String?
+  complement String?
+  postal_code String?
+  latitude   Float?
+  longitude  Float?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -91,7 +96,12 @@ model Subscriber {
 model Ecopoint {
   id                 Int      @id @default(autoincrement())
   name               String
-  address            String
+  street             String
+  number             String?
+  complement         String?
+  postal_code        String?
+  latitude           Float?
+  longitude          Float?
   accepted_materials String
   collection_days    String
   collection_time    String
