@@ -1,11 +1,12 @@
 import { InvalidAddressError } from "../errors/InvalidAddressError.js";
+import { PostalCode } from "./PostalCode.js";
 import { GeoLocation } from "./GeoLocation.js";
 
 export interface AddressProps {
     street: string;
     number?: string;
     complement?: string;
-    postalCode?: string;
+    postalCode?: PostalCode;
     geoLocation?: GeoLocation;
 }
 
@@ -13,7 +14,7 @@ export class Address {
     private readonly street: string;
     private readonly number?: string;
     private readonly complement?: string;
-    private readonly postalCode?: string;
+    private readonly postalCode?: PostalCode;
     private readonly geoLocation?: GeoLocation;
 
     constructor(props: AddressProps) {
@@ -22,23 +23,19 @@ export class Address {
         this.street = props.street.trim();
         this.number = props.number?.trim();
         this.complement = props.complement?.trim();
-        this.postalCode = props.postalCode?.trim();
+        this.postalCode = props.postalCode;
         this.geoLocation = props.geoLocation;
     }
 
     private validate(props: AddressProps): void {
-        // Validar rua obrigatória
         if (!props.street || props.street.trim().length === 0) {
             throw new InvalidAddressError("A rua é obrigatória");
         }
-
-        // Validar número obrigatório
         if (!props.number || props.number.trim().length === 0) {
             throw new InvalidAddressError("O número é obrigatório");
         }
     }
 
-    // Getters para acessar os valores (imutabilidade)
     public getStreet(): string {
         return this.street;
     }
@@ -51,7 +48,7 @@ export class Address {
         return this.complement;
     }
 
-    public getPostalCode(): string | undefined {
+    public getPostalCode(): PostalCode | undefined {
         return this.postalCode;
     }
 
@@ -59,7 +56,6 @@ export class Address {
         return this.geoLocation;
     }
 
-    // Método para obter endereço completo como string
     public getFullAddress(): string {
         let address = `${this.street}, ${this.number}`;
 
@@ -68,23 +64,25 @@ export class Address {
         }
 
         if (this.postalCode) {
-            address += ` - CEP: ${this.postalCode}`;
+            address += ` - CEP: ${this.postalCode.getFormatted()}`;
         }
 
         return address;
     }
-
-    // Método para verificar se tem coordenadas
+  
     public hasGeoLocation(): boolean {
         return this.geoLocation !== undefined;
     }
-
-    // Método equals para comparar dois endereços
+  
     public equals(other: Address): boolean {
         if (!(other instanceof Address)) {
             return false;
         }
 
+        const postalCodeEquals =
+            (this.postalCode === undefined && other.postalCode === undefined) ||
+            (this.postalCode !== undefined && other.postalCode !== undefined && this.postalCode.equals(other.postalCode));
+      
         const geoLocationEquals = 
             (this.geoLocation === undefined && other.geoLocation === undefined) ||
             (this.geoLocation !== undefined && other.geoLocation !== undefined && this.geoLocation.equals(other.geoLocation));
@@ -93,12 +91,11 @@ export class Address {
             this.street === other.street &&
             this.number === other.number &&
             this.complement === other.complement &&
-            this.postalCode === other.postalCode &&
+            postalCodeEquals &&
             geoLocationEquals
         );
     }
 
-    // Método para criar uma cópia com alterações (mantém imutabilidade)
     public withChanges(changes: Partial<AddressProps>): Address {
         return new Address({
             street: changes.street ?? this.street,
