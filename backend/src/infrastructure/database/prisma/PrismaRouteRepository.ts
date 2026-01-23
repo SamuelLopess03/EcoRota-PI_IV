@@ -1,18 +1,24 @@
 import { PrismaClient } from "../../../../prisma/generated/client/client.js";
 import { Route } from "../../../domain/entities/Route.js";
 import { RouteRepository } from "../../../domain/repositories/RouteRepository.js";
+import { CollectionDays } from "../../../domain/value-objects/CollectionDays.js";
+import { CollectionTime } from "../../../domain/value-objects/CollectionTime.js";
 
 export class PrismaRouteRepository implements RouteRepository {
   constructor(private prisma: PrismaClient) {}
+
+  private parseCollectionTime(timeString: string): CollectionTime {
+    const [startTime, endTime] = timeString.split(" - ");
+    return new CollectionTime(startTime.trim(), endTime.trim());
+  }
 
   async create(data: Omit<Route, "id" | "created_at" | "updated_at">): Promise<Route> {
     const createdRoute = await this.prisma.route.create({
       data: {
         name: data.name,
-        days_of_week: data.days_of_week,
+        collection_days: data.collection_days.toString(),
         collection_type: data.collection_type,
-        start_time: data.start_time,
-        end_time: data.end_time,
+        collection_time: data.collection_time.getFormattedInterval(),
         admin_id_created: data.admin_id_created,
         admin_id_updated: data.admin_id_updated,
       },
@@ -21,10 +27,9 @@ export class PrismaRouteRepository implements RouteRepository {
     return new Route(
       createdRoute.id,
       createdRoute.name,
-      createdRoute.days_of_week,
+      CollectionDays.fromString(createdRoute.collection_days),
       createdRoute.collection_type,
-      createdRoute.start_time,
-      createdRoute.end_time,
+      this.parseCollectionTime(createdRoute.collection_time),
       createdRoute.created_at,
       createdRoute.updated_at,
       createdRoute.admin_id_created,
@@ -42,10 +47,9 @@ export class PrismaRouteRepository implements RouteRepository {
     return new Route(
       route.id,
       route.name,
-      route.days_of_week,
+      CollectionDays.fromString(route.collection_days),
       route.collection_type,
-      route.start_time,
-      route.end_time,
+      this.parseCollectionTime(route.collection_time),
       route.created_at,
       route.updated_at,
       route.admin_id_created,
@@ -61,10 +65,9 @@ export class PrismaRouteRepository implements RouteRepository {
         new Route(
           route.id,
           route.name,
-          route.days_of_week,
+          CollectionDays.fromString(route.collection_days),
           route.collection_type,
-          route.start_time,
-          route.end_time,
+          this.parseCollectionTime(route.collection_time),
           route.created_at,
           route.updated_at,
           route.admin_id_created,
