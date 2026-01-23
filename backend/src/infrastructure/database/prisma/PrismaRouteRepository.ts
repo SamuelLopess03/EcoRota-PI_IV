@@ -1,6 +1,7 @@
 import { PrismaClient } from "../../../../prisma/generated/client/client.js";
 import { Route } from "../../../domain/entities/Route.js";
 import { RouteRepository } from "../../../domain/repositories/RouteRepository.js";
+import { CollectionType } from "../../../domain/value-objects/CollectionType.js";
 
 export class PrismaRouteRepository implements RouteRepository {
   constructor(private prisma: PrismaClient) {}
@@ -10,7 +11,7 @@ export class PrismaRouteRepository implements RouteRepository {
       data: {
         name: data.name,
         days_of_week: data.days_of_week,
-        collection_type: data.collection_type,
+        collection_type: data.collection_type.getValue(),
         start_time: data.start_time,
         end_time: data.end_time,
         admin_id_created: data.admin_id_created,
@@ -22,7 +23,7 @@ export class PrismaRouteRepository implements RouteRepository {
       createdRoute.id,
       createdRoute.name,
       createdRoute.days_of_week,
-      createdRoute.collection_type,
+      new CollectionType(createdRoute.collection_type),
       createdRoute.start_time,
       createdRoute.end_time,
       createdRoute.created_at,
@@ -43,7 +44,7 @@ export class PrismaRouteRepository implements RouteRepository {
       route.id,
       route.name,
       route.days_of_week,
-      route.collection_type,
+      new CollectionType(route.collection_type),
       route.start_time,
       route.end_time,
       route.created_at,
@@ -62,7 +63,7 @@ export class PrismaRouteRepository implements RouteRepository {
           route.id,
           route.name,
           route.days_of_week,
-          route.collection_type,
+          new CollectionType(route.collection_type),
           route.start_time,
           route.end_time,
           route.created_at,
