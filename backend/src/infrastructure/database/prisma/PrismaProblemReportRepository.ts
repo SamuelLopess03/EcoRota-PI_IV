@@ -2,6 +2,8 @@ import { PrismaClient } from "../../../../prisma/generated/client/client.js";
 import { ProblemReport } from "../../../domain/entities/ProblemReport.js";
 import { ProblemReportRepository } from "../../../domain/repositories/ProblemReportRepository.js";
 import { ProblemStatus } from "../../../domain/value-objects/ProblemStatus.js";
+import { ProblemDescription } from "../../../domain/value-objects/ProblemDescription.js";
+import { ProblemType } from "../../../domain/value-objects/ProblemType.js";
 
 export class PrismaProblemReportRepository implements ProblemReportRepository {
   constructor(private prisma: PrismaClient) {}
@@ -9,9 +11,9 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
   async create(data: Omit<ProblemReport, "id" | "created_at" | "updated_at">): Promise<ProblemReport> {
     const createdProblem = await this.prisma.reportedProblem.create({
       data: {
-        problem_type: data.problem_type,
-        description: data.description,
         status: data.status.getValue(),
+        description: data.description.getValue(),
+        problem_type: data.problemType.getValue(),
         url_attachments: data.url_attachments,
         protocol: data.protocol,
         subscriber_id: data.subscriber_id,
@@ -21,9 +23,9 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
 
     return new ProblemReport(
       createdProblem.id,
-      createdProblem.problem_type,
-      createdProblem.description,
       new ProblemStatus(createdProblem.status),
+      new ProblemDescription(createdProblem.description),
+      new ProblemType(createdProblem.problem_type),
       createdProblem.url_attachments,
       createdProblem.protocol,
       createdProblem.created_at,
@@ -42,9 +44,9 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
 
     return new ProblemReport(
       problem.id,
-      problem.problem_type,
-      problem.description,
       new ProblemStatus(problem.status),
+      new ProblemDescription(problem.description),
+      new ProblemType(problem.problem_type),
       problem.url_attachments,
       problem.protocol,
       problem.created_at,
@@ -63,9 +65,9 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
       (problem) =>
         new ProblemReport(
           problem.id,
-          problem.problem_type,
-          problem.description,
           new ProblemStatus(problem.status),
+          new ProblemDescription(problem.description),
+          new ProblemType(problem.problem_type),
           problem.url_attachments,
           problem.protocol,
           problem.created_at,
@@ -83,9 +85,9 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
       (problem) =>
         new ProblemReport(
           problem.id,
-          problem.problem_type,
-          problem.description,
           new ProblemStatus(problem.status),
+          new ProblemDescription(problem.description),
+          new ProblemType(problem.problem_type),
           problem.url_attachments,
           problem.protocol,
           problem.created_at,
@@ -109,9 +111,9 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
 
     return new ProblemReport(
       updatedProblem.id,
-      updatedProblem.problem_type,
-      updatedProblem.description,
       new ProblemStatus(updatedProblem.status),
+      new ProblemDescription(updatedProblem.description),
+      new ProblemType(updatedProblem.problem_type),
       updatedProblem.url_attachments,
       updatedProblem.protocol,
       updatedProblem.created_at,
