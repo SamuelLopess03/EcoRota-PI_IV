@@ -1,8 +1,10 @@
+import { ProblemDescription } from "../value-objects/ProblemDescription.js";
+
 export class ProblemReport {
   constructor(
     public readonly id: number,
     public problem_type: string,
-    public description: string,
+    public description: ProblemDescription,
     public status: string,
     public url_attachments: string,
     public protocol: string,
