@@ -3,6 +3,7 @@ import { Route } from "../../../domain/entities/Route.js";
 import { RouteRepository } from "../../../domain/repositories/RouteRepository.js";
 import { CollectionDays } from "../../../domain/value-objects/CollectionDays.js";
 import { CollectionTime } from "../../../domain/value-objects/CollectionTime.js";
+import { CollectionType } from "../../../domain/value-objects/CollectionType.js";
 
 export class PrismaRouteRepository implements RouteRepository {
   constructor(private prisma: PrismaClient) {}
@@ -17,8 +18,8 @@ export class PrismaRouteRepository implements RouteRepository {
       data: {
         name: data.name,
         collection_days: data.collection_days.toString(),
-        collection_type: data.collection_type,
         collection_time: data.collection_time.getFormattedInterval(),
+        collection_type: data.collection_type.getValue(),
         admin_id_created: data.admin_id_created,
         admin_id_updated: data.admin_id_updated,
       },
@@ -28,8 +29,8 @@ export class PrismaRouteRepository implements RouteRepository {
       createdRoute.id,
       createdRoute.name,
       CollectionDays.fromString(createdRoute.collection_days),
-      createdRoute.collection_type,
       this.parseCollectionTime(createdRoute.collection_time),
+      new CollectionType(createdRoute.collection_type),
       createdRoute.created_at,
       createdRoute.updated_at,
       createdRoute.admin_id_created,
@@ -48,8 +49,8 @@ export class PrismaRouteRepository implements RouteRepository {
       route.id,
       route.name,
       CollectionDays.fromString(route.collection_days),
-      route.collection_type,
       this.parseCollectionTime(route.collection_time),
+      new CollectionType(route.collection_type),
       route.created_at,
       route.updated_at,
       route.admin_id_created,
@@ -66,8 +67,8 @@ export class PrismaRouteRepository implements RouteRepository {
           route.id,
           route.name,
           CollectionDays.fromString(route.collection_days),
-          route.collection_type,
           this.parseCollectionTime(route.collection_time),
+          new CollectionType(route.collection_type),
           route.created_at,
           route.updated_at,
           route.admin_id_created,
