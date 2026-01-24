@@ -6,7 +6,7 @@ import { CollectionTime } from "../../../domain/value-objects/CollectionTime.js"
 import { CollectionType } from "../../../domain/value-objects/CollectionType.js";
 
 export class PrismaRouteRepository implements RouteRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
   private parseCollectionTime(timeString: string): CollectionTime {
     const [startTime, endTime] = timeString.split(" - ");
@@ -75,5 +75,36 @@ export class PrismaRouteRepository implements RouteRepository {
           route.admin_id_updated
         )
     );
+  }
+
+  async update(id: number, data: Partial<Omit<Route, "id" | "created_at">>): Promise<Route> {
+    const updatedRoute = await this.prisma.route.update({
+      where: { id },
+      data: {
+        name: data.name,
+        collection_days: data.collection_days?.toString(),
+        collection_time: data.collection_time?.getFormattedInterval(),
+        collection_type: data.collection_type?.getValue(),
+        admin_id_updated: data.admin_id_updated,
+      },
+    });
+
+    return new Route(
+      updatedRoute.id,
+      updatedRoute.name,
+      CollectionDays.fromString(updatedRoute.collection_days),
+      this.parseCollectionTime(updatedRoute.collection_time),
+      new CollectionType(updatedRoute.collection_type),
+      updatedRoute.created_at,
+      updatedRoute.updated_at,
+      updatedRoute.admin_id_created,
+      updatedRoute.admin_id_updated
+    );
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.prisma.route.delete({
+      where: { id },
+    });
   }
 }

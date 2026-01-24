@@ -145,4 +145,38 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
       updatedProblem.resolved_by_admin_id
     );
   }
+
+  async update(id: number, data: Partial<Omit<ProblemReport, "id" | "created_at">>): Promise<ProblemReport> {
+    const updatedProblem = await this.prisma.reportedProblem.update({
+      where: { id },
+      data: {
+        protocol: data.protocol?.getValue(),
+        url_attachments: data.attachments?.serialize(),
+        status: data.status?.getValue(),
+        description: data.description?.getValue(),
+        problem_type: data.problemType?.getValue(),
+        subscriber_id: data.subscriber_id,
+        resolved_by_admin_id: data.resolved_by_admin_id,
+      },
+    });
+
+    return new ProblemReport(
+      updatedProblem.id,
+      new ProblemProtocol(updatedProblem.protocol),
+      new ProblemAttachments(updatedProblem.url_attachments),
+      new ProblemStatus(updatedProblem.status),
+      new ProblemDescription(updatedProblem.description),
+      new ProblemType(updatedProblem.problem_type),
+      updatedProblem.created_at,
+      updatedProblem.updated_at,
+      updatedProblem.subscriber_id,
+      updatedProblem.resolved_by_admin_id
+    );
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.prisma.reportedProblem.delete({
+      where: { id },
+    });
+  }
 }

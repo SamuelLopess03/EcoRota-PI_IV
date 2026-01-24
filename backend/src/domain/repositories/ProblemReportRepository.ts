@@ -8,5 +8,7 @@ export interface ProblemReportRepository {
   findByProtocol(protocol: ProblemProtocol): Promise<ProblemReport | null>;
   findBySubscriberId(subscriberId: number): Promise<ProblemReport[]>;
   findAll(): Promise<ProblemReport[]>;
+  update(id: number, data: Partial<Omit<ProblemReport, "id" | "created_at">>): Promise<ProblemReport>;
   updateStatus(id: number, status: ProblemStatus, resolvedByAdminId?: number): Promise<ProblemReport | null>;
+  delete(id: number): Promise<void>;
 }
