@@ -8,7 +8,7 @@ import { ProblemDescription } from "../../../domain/value-objects/ProblemDescrip
 import { ProblemType } from "../../../domain/value-objects/ProblemType.js";
 
 export class PrismaProblemReportRepository implements ProblemReportRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
   async create(data: Omit<ProblemReport, "id" | "created_at" | "updated_at">): Promise<ProblemReport> {
     const createdProblem = await this.prisma.reportedProblem.create({
@@ -40,6 +40,27 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
   async findById(id: number): Promise<ProblemReport | null> {
     const problem = await this.prisma.reportedProblem.findUnique({
       where: { id },
+    });
+
+    if (!problem) return null;
+
+    return new ProblemReport(
+      problem.id,
+      new ProblemProtocol(problem.protocol),
+      new ProblemAttachments(problem.url_attachments),
+      new ProblemStatus(problem.status),
+      new ProblemDescription(problem.description),
+      new ProblemType(problem.problem_type),
+      problem.created_at,
+      problem.updated_at,
+      problem.subscriber_id,
+      problem.resolved_by_admin_id
+    );
+  }
+
+  async findByProtocol(protocol: ProblemProtocol): Promise<ProblemReport | null> {
+    const problem = await this.prisma.reportedProblem.findFirst({
+      where: { protocol: protocol.getValue() },
     });
 
     if (!problem) return null;

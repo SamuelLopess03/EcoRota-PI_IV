@@ -66,9 +66,9 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
         );
     }
 
-    async findByEmail(email: string): Promise<Subscriber | null> {
+    async findByEmail(email: Email): Promise<Subscriber | null> {
         const subscriber = await this.prisma.subscriber.findUnique({
-            where: { email },
+            where: { email: email.getValue() },
         });
 
         if (!subscriber) return null;

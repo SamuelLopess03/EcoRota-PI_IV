@@ -4,7 +4,7 @@ import { AdministratorRepository } from "../../../domain/repositories/Administra
 import { Email } from "../../../domain/value-objects/Email.js";
 
 export class PrismaAdministratorRepository implements AdministratorRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
   async create(data: Omit<Administrator, "id" | "creation_date" | "update_date">): Promise<Administrator> {
     const createdAdmin = await this.prisma.administrador.create({
@@ -25,9 +25,9 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
     );
   }
 
-  async findByEmail(email: string): Promise<Administrator | null> {
+  async findByEmail(email: Email): Promise<Administrator | null> {
     const admin = await this.prisma.administrador.findUnique({
-      where: { email },
+      where: { email: email.getValue() },
     });
 
     if (!admin) return null;
