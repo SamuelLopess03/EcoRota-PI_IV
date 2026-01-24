@@ -9,7 +9,7 @@ import { GeoLocation } from "../../../domain/value-objects/GeoLocation.js";
 export class PrismaSubscriberRepository implements SubscriberRepository {
     constructor(private prisma: PrismaClient) { }
 
-    async create(data: Omit<Subscriber, "id" | "created_at" | "updated_at">): Promise<Subscriber> {
+    async create(data: Omit<Subscriber, "id" | "createdAt" | "updatedAt">): Promise<Subscriber> {
         const createdSubscriber = await this.prisma.subscriber.create({
             data: {
                 email: data.email.getValue(),
@@ -19,7 +19,7 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
                 postal_code: data.address.getPostalCode()?.getValue(),
                 latitude: data.address.getGeoLocation()?.getLatitude(),
                 longitude: data.address.getGeoLocation()?.getLongitude(),
-                neighborhood_id: data.neighborhood_id,
+                neighborhood_id: data.neighborhoodId,
             },
         });
 
@@ -141,7 +141,7 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
         );
     }
 
-    async update(id: number, data: Partial<Omit<Subscriber, "id" | "created_at">>): Promise<Subscriber> {
+    async update(id: number, data: Partial<Omit<Subscriber, "id" | "createdAt">>): Promise<Subscriber> {
         const updatedSubscriber = await this.prisma.subscriber.update({
             where: { id },
             data: {
@@ -152,7 +152,7 @@ export class PrismaSubscriberRepository implements SubscriberRepository {
                 postal_code: data.address?.getPostalCode()?.getValue(),
                 latitude: data.address?.getGeoLocation()?.getLatitude(),
                 longitude: data.address?.getGeoLocation()?.getLongitude(),
-                neighborhood_id: data.neighborhood_id,
+                neighborhood_id: data.neighborhoodId,
             },
         });
 

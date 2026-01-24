@@ -10,7 +10,7 @@ import { ProblemType } from "../../../domain/value-objects/ProblemType.js";
 export class PrismaProblemReportRepository implements ProblemReportRepository {
   constructor(private prisma: PrismaClient) { }
 
-  async create(data: Omit<ProblemReport, "id" | "created_at" | "updated_at">): Promise<ProblemReport> {
+  async create(data: Omit<ProblemReport, "id" | "createdAt" | "updatedAt">): Promise<ProblemReport> {
     const createdProblem = await this.prisma.reportedProblem.create({
       data: {
         protocol: data.protocol.getValue(),
@@ -18,8 +18,8 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
         status: data.status.getValue(),
         description: data.description.getValue(),
         problem_type: data.problemType.getValue(),
-        subscriber_id: data.subscriber_id,
-        resolved_by_admin_id: data.resolved_by_admin_id,
+        subscriber_id: data.subscriberId,
+        resolved_by_admin_id: data.resolvedByAdminId,
       },
     });
 
@@ -146,7 +146,7 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
     );
   }
 
-  async update(id: number, data: Partial<Omit<ProblemReport, "id" | "created_at">>): Promise<ProblemReport> {
+  async update(id: number, data: Partial<Omit<ProblemReport, "id" | "createdAt">>): Promise<ProblemReport> {
     const updatedProblem = await this.prisma.reportedProblem.update({
       where: { id },
       data: {
@@ -155,8 +155,8 @@ export class PrismaProblemReportRepository implements ProblemReportRepository {
         status: data.status?.getValue(),
         description: data.description?.getValue(),
         problem_type: data.problemType?.getValue(),
-        subscriber_id: data.subscriber_id,
-        resolved_by_admin_id: data.resolved_by_admin_id,
+        subscriber_id: data.subscriberId,
+        resolved_by_admin_id: data.resolvedByAdminId,
       },
     });
 

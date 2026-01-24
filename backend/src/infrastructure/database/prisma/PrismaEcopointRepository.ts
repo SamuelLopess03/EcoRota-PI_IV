@@ -16,7 +16,7 @@ export class PrismaEcopointRepository implements EcopointRepository {
         return new CollectionTime(startTime.trim(), endTime.trim());
     }
 
-    async create(data: Omit<Ecopoint, "id" | "created_at" | "updated_at">): Promise<Ecopoint> {
+    async create(data: Omit<Ecopoint, "id" | "createdAt" | "updatedAt">): Promise<Ecopoint> {
         const createdEcopoint = await this.prisma.ecopoint.create({
             data: {
                 name: data.name,
@@ -26,12 +26,12 @@ export class PrismaEcopointRepository implements EcopointRepository {
                 postal_code: data.address.getPostalCode()?.getValue(),
                 latitude: data.address.getGeoLocation()?.getLatitude(),
                 longitude: data.address.getGeoLocation()?.getLongitude(),
-                accepted_materials: data.accepted_materials.toString(),
-                collection_days: data.collection_days.toString(),
-                collection_time: data.collection_time.getFormattedInterval(),
-                neighborhood_id: data.neighborhood_id,
-                admin_id_created: data.admin_id_created,
-                admin_id_updated: data.admin_id_updated,
+                accepted_materials: data.acceptedMaterials.toString(),
+                collection_days: data.collectionDays.toString(),
+                collection_time: data.collectionTime.getFormattedInterval(),
+                neighborhood_id: data.neighborhoodId,
+                admin_id_created: data.adminIdCreated,
+                admin_id_updated: data.adminIdUpdated,
             },
         });
 
@@ -148,7 +148,7 @@ export class PrismaEcopointRepository implements EcopointRepository {
         );
     }
 
-    async update(id: number, data: Partial<Omit<Ecopoint, "id" | "created_at">>): Promise<Ecopoint> {
+    async update(id: number, data: Partial<Omit<Ecopoint, "id" | "createdAt">>): Promise<Ecopoint> {
         const updatedEcopoint = await this.prisma.ecopoint.update({
             where: { id },
             data: {
@@ -159,12 +159,12 @@ export class PrismaEcopointRepository implements EcopointRepository {
                 postal_code: data.address?.getPostalCode()?.getValue(),
                 latitude: data.address?.getGeoLocation()?.getLatitude(),
                 longitude: data.address?.getGeoLocation()?.getLongitude(),
-                accepted_materials: data.accepted_materials?.toString(),
-                collection_days: data.collection_days?.toString(),
-                collection_time: data.collection_time?.getFormattedInterval(),
-                neighborhood_id: data.neighborhood_id,
-                admin_id_created: data.admin_id_created,
-                admin_id_updated: data.admin_id_updated,
+                accepted_materials: data.acceptedMaterials?.toString(),
+                collection_days: data.collectionDays?.toString(),
+                collection_time: data.collectionTime?.getFormattedInterval(),
+                neighborhood_id: data.neighborhoodId,
+                admin_id_created: data.adminIdCreated,
+                admin_id_updated: data.adminIdUpdated,
             },
         });
 

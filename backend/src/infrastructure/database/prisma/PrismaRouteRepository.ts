@@ -13,15 +13,15 @@ export class PrismaRouteRepository implements RouteRepository {
     return new CollectionTime(startTime.trim(), endTime.trim());
   }
 
-  async create(data: Omit<Route, "id" | "created_at" | "updated_at">): Promise<Route> {
+  async create(data: Omit<Route, "id" | "createdAt" | "updatedAt">): Promise<Route> {
     const createdRoute = await this.prisma.route.create({
       data: {
         name: data.name,
-        collection_days: data.collection_days.toString(),
-        collection_time: data.collection_time.getFormattedInterval(),
-        collection_type: data.collection_type.getValue(),
-        admin_id_created: data.admin_id_created,
-        admin_id_updated: data.admin_id_updated,
+        collection_days: data.collectionDays.toString(),
+        collection_time: data.collectionTime.getFormattedInterval(),
+        collection_type: data.collectionType.getValue(),
+        admin_id_created: data.adminIdCreated,
+        admin_id_updated: data.adminIdUpdated,
       },
     });
 
@@ -77,15 +77,15 @@ export class PrismaRouteRepository implements RouteRepository {
     );
   }
 
-  async update(id: number, data: Partial<Omit<Route, "id" | "created_at">>): Promise<Route> {
+  async update(id: number, data: Partial<Omit<Route, "id" | "createdAt">>): Promise<Route> {
     const updatedRoute = await this.prisma.route.update({
       where: { id },
       data: {
         name: data.name,
-        collection_days: data.collection_days?.toString(),
-        collection_time: data.collection_time?.getFormattedInterval(),
-        collection_type: data.collection_type?.getValue(),
-        admin_id_updated: data.admin_id_updated,
+        collection_days: data.collectionDays?.toString(),
+        collection_time: data.collectionTime?.getFormattedInterval(),
+        collection_type: data.collectionType?.getValue(),
+        admin_id_updated: data.adminIdUpdated,
       },
     });
 

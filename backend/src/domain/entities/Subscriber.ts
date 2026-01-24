@@ -6,8 +6,8 @@ export class Subscriber {
         public readonly id: number,
         public email: Email,
         public address: Address,
-        public neighborhood_id: number,
-        public readonly created_at: Date,
-        public readonly updated_at: Date
+        public neighborhoodId: number,
+        public readonly createdAt: Date,
+        public readonly updatedAt: Date
     ) { }
 }

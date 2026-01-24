@@ -6,12 +6,12 @@ export class Route {
   constructor(
     public readonly id: number,
     public name: string,
-    public collection_days: CollectionDays,
-    public collection_time: CollectionTime,
-    public collection_type: CollectionType,
-    public created_at: Date,
-    public updated_at: Date,
-    public admin_id_created: number,
-    public admin_id_updated: number | null
-  ) {}
+    public collectionDays: CollectionDays,
+    public collectionTime: CollectionTime,
+    public collectionType: CollectionType,
+    public createdAt: Date,
+    public updatedAt: Date,
+    public adminIdCreated: number,
+    public adminIdUpdated: number | null
+  ) { }
 }

@@ -8,7 +8,7 @@ import { GeoLocation } from "../../../domain/value-objects/GeoLocation.js";
 export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
     constructor(private prisma: PrismaClient) { }
 
-    async create(data: Omit<Neighborhood, "id" | "created_at" | "updated_at">): Promise<Neighborhood> {
+    async create(data: Omit<Neighborhood, "id" | "createdAt" | "updatedAt">): Promise<Neighborhood> {
         const createdNeighborhood = await this.prisma.neighborhood.create({
             data: {
                 name: data.name,
@@ -16,9 +16,9 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
                 cep: data.postalCode.getValue(),
                 latitude: data.geoLocation.getLatitude(),
                 longitude: data.geoLocation.getLongitude(),
-                route_id: data.route_id,
-                admin_id_created: data.admin_id_created,
-                admin_id_updated: data.admin_id_updated,
+                route_id: data.routeId,
+                admin_id_created: data.adminIdCreated,
+                admin_id_updated: data.adminIdUpdated,
             },
         });
 
@@ -99,7 +99,7 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
         );
     }
 
-    async update(id: number, data: Partial<Omit<Neighborhood, "id" | "created_at">>): Promise<Neighborhood> {
+    async update(id: number, data: Partial<Omit<Neighborhood, "id" | "createdAt">>): Promise<Neighborhood> {
         const updatedNeighborhood = await this.prisma.neighborhood.update({
             where: { id },
             data: {
@@ -108,8 +108,8 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
                 cep: data.postalCode?.getValue(),
                 latitude: data.geoLocation?.getLatitude(),
                 longitude: data.geoLocation?.getLongitude(),
-                route_id: data.route_id,
-                admin_id_updated: data.admin_id_updated,
+                route_id: data.routeId,
+                admin_id_updated: data.adminIdUpdated,
             },
         });
 

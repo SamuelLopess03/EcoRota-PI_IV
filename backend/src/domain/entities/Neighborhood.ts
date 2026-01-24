@@ -9,10 +9,10 @@ export class Neighborhood {
     public populationEstimate: PopulationEstimate,
     public postalCode: PostalCode,
     public geoLocation: GeoLocation,
-    public readonly created_at: Date,
-    public readonly updated_at: Date,
-    public route_id: number,
-    public admin_id_created: number,
-    public admin_id_updated: number | null
-  ) {}
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date,
+    public routeId: number,
+    public adminIdCreated: number,
+    public adminIdUpdated: number | null
+  ) { }
 }

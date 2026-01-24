@@ -7,14 +7,14 @@ export class Ecopoint {
     constructor(
         public readonly id: number,
         public name: string,
-        public accepted_materials: AcceptedMaterials,
+        public acceptedMaterials: AcceptedMaterials,
         public address: Address,
-        public collection_days: CollectionDays,
-        public collection_time: CollectionTime,
-        public neighborhood_id: number,
-        public admin_id_created: number,
-        public admin_id_updated: number | null,
-        public readonly created_at: Date,
-        public readonly updated_at: Date
+        public collectionDays: CollectionDays,
+        public collectionTime: CollectionTime,
+        public neighborhoodId: number,
+        public adminIdCreated: number,
+        public adminIdUpdated: number | null,
+        public readonly createdAt: Date,
+        public readonly updatedAt: Date
     ) { }
 }

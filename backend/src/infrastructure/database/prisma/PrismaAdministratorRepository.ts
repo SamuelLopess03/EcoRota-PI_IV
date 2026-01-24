@@ -6,7 +6,7 @@ import { Email } from "../../../domain/value-objects/Email.js";
 export class PrismaAdministratorRepository implements AdministratorRepository {
   constructor(private prisma: PrismaClient) { }
 
-  async create(data: Omit<Administrator, "id" | "creation_date" | "update_date">): Promise<Administrator> {
+  async create(data: Omit<Administrator, "id" | "creationDate" | "updateDate">): Promise<Administrator> {
     const createdAdmin = await this.prisma.administrador.create({
       data: {
         name: data.name,
@@ -75,7 +75,7 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
     );
   }
 
-  async update(id: number, data: Partial<Omit<Administrator, "id" | "creation_date">>): Promise<Administrator> {
+  async update(id: number, data: Partial<Omit<Administrator, "id" | "creationDate">>): Promise<Administrator> {
     const updatedAdmin = await this.prisma.administrador.update({
       where: { id },
       data: {

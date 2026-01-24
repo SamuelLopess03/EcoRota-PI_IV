@@ -12,9 +12,9 @@ export class ProblemReport {
     public status: ProblemStatus,
     public description: ProblemDescription,
     public problemType: ProblemType,
-    public readonly created_at: Date,
-    public readonly updated_at: Date,
-    public subscriber_id: number,
-    public resolved_by_admin_id: number | null
-  ) {}
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date,
+    public subscriberId: number,
+    public resolvedByAdminId: number | null
+  ) { }
 }
