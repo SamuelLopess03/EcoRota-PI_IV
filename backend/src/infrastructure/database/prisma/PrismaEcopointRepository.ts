@@ -7,6 +7,9 @@ import { Address } from "../../../domain/value-objects/Address.js";
 import { CollectionDays } from "../../../domain/value-objects/CollectionDays.js";
 import { PostalCode } from "../../../domain/value-objects/PostalCode.js";
 import { GeoLocation } from "../../../domain/value-objects/GeoLocation.js";
+import { EntityNotFoundError } from "../../../domain/errors/persistence/EntityNotFoundError.js";
+import { ConflictError } from "../../../domain/errors/persistence/ConflictError.js";
+import { PersistenceError } from "../../../domain/errors/persistence/PersistenceError.js";
 
 export class PrismaEcopointRepository implements EcopointRepository {
     constructor(private prisma: PrismaClient) { }
@@ -17,183 +20,222 @@ export class PrismaEcopointRepository implements EcopointRepository {
     }
 
     async create(data: Omit<Ecopoint, "id" | "createdAt" | "updatedAt">): Promise<Ecopoint> {
-        const createdEcopoint = await this.prisma.ecopoint.create({
-            data: {
-                name: data.name,
-                street: data.address.getStreet(),
-                number: data.address.getNumber(),
-                complement: data.address.getComplement(),
-                postal_code: data.address.getPostalCode()?.getValue(),
-                latitude: data.address.getGeoLocation()?.getLatitude(),
-                longitude: data.address.getGeoLocation()?.getLongitude(),
-                accepted_materials: data.acceptedMaterials.toString(),
-                collection_days: data.collectionDays.toString(),
-                collection_time: data.collectionTime.getFormattedInterval(),
-                neighborhood_id: data.neighborhoodId,
-                admin_id_created: data.adminIdCreated,
-                admin_id_updated: data.adminIdUpdated,
-            },
-        });
+        try {
+            const createdEcopoint = await this.prisma.ecopoint.create({
+                data: {
+                    name: data.name,
+                    street: data.address.getStreet(),
+                    number: data.address.getNumber(),
+                    complement: data.address.getComplement(),
+                    postal_code: data.address.getPostalCode()?.getValue(),
+                    latitude: data.address.getGeoLocation()?.getLatitude(),
+                    longitude: data.address.getGeoLocation()?.getLongitude(),
+                    accepted_materials: data.acceptedMaterials.toString(),
+                    collection_days: data.collectionDays.toString(),
+                    collection_time: data.collectionTime.getFormattedInterval(),
+                    neighborhood_id: data.neighborhoodId,
+                    admin_id_created: data.adminIdCreated,
+                    admin_id_updated: data.adminIdUpdated,
+                },
+            });
 
-        return new Ecopoint(
-            createdEcopoint.id,
-            createdEcopoint.name,
-            AcceptedMaterials.fromString(createdEcopoint.accepted_materials),
-            new Address({
-                street: createdEcopoint.street,
-                number: createdEcopoint.number ?? undefined,
-                complement: createdEcopoint.complement ?? undefined,
-                postalCode: createdEcopoint.postal_code ? new PostalCode(createdEcopoint.postal_code) : undefined,
-                geoLocation: (createdEcopoint.latitude !== null && createdEcopoint.longitude !== null)
-                    ? new GeoLocation(createdEcopoint.latitude, createdEcopoint.longitude)
-                    : undefined,
-            }),
-            CollectionDays.fromString(createdEcopoint.collection_days),
-            this.parseCollectionTime(createdEcopoint.collection_time),
-            createdEcopoint.neighborhood_id,
-            createdEcopoint.admin_id_created,
-            createdEcopoint.admin_id_updated,
-            createdEcopoint.created_at,
-            createdEcopoint.updated_at
-        );
+            return new Ecopoint(
+                createdEcopoint.id,
+                createdEcopoint.name,
+                AcceptedMaterials.fromString(createdEcopoint.accepted_materials),
+                new Address({
+                    street: createdEcopoint.street,
+                    number: createdEcopoint.number ?? undefined,
+                    complement: createdEcopoint.complement ?? undefined,
+                    postalCode: createdEcopoint.postal_code ? new PostalCode(createdEcopoint.postal_code) : undefined,
+                    geoLocation: (createdEcopoint.latitude !== null && createdEcopoint.longitude !== null)
+                        ? new GeoLocation(createdEcopoint.latitude, createdEcopoint.longitude)
+                        : undefined,
+                }),
+                CollectionDays.fromString(createdEcopoint.collection_days),
+                this.parseCollectionTime(createdEcopoint.collection_time),
+                createdEcopoint.neighborhood_id,
+                createdEcopoint.admin_id_created,
+                createdEcopoint.admin_id_updated,
+                createdEcopoint.created_at,
+                createdEcopoint.updated_at
+            );
+        } catch (error: any) {
+            if (error.code === 'P2002') {
+                throw new ConflictError(`Ecoponto com dados conflitantes já existe.`);
+            }
+            throw new PersistenceError(`Erro ao criar ecoponto: ${error.message}`);
+        }
     }
 
-    async findById(id: number): Promise<Ecopoint | null> {
-        const ecopoint = await this.prisma.ecopoint.findUnique({
-            where: { id },
-        });
+    async findById(id: number): Promise<Ecopoint> {
+        try {
+            const ecopoint = await this.prisma.ecopoint.findUnique({
+                where: { id },
+            });
 
-        if (!ecopoint) return null;
+            if (!ecopoint) {
+                throw new EntityNotFoundError("Ecoponto", id);
+            }
 
-        return new Ecopoint(
-            ecopoint.id,
-            ecopoint.name,
-            AcceptedMaterials.fromString(ecopoint.accepted_materials),
-            new Address({
-                street: ecopoint.street,
-                number: ecopoint.number ?? undefined,
-                complement: ecopoint.complement ?? undefined,
-                postalCode: ecopoint.postal_code ? new PostalCode(ecopoint.postal_code) : undefined,
-                geoLocation: (ecopoint.latitude !== null && ecopoint.longitude !== null)
-                    ? new GeoLocation(ecopoint.latitude, ecopoint.longitude)
-                    : undefined,
-            }),
-            CollectionDays.fromString(ecopoint.collection_days),
-            this.parseCollectionTime(ecopoint.collection_time),
-            ecopoint.neighborhood_id,
-            ecopoint.admin_id_created,
-            ecopoint.admin_id_updated,
-            ecopoint.created_at,
-            ecopoint.updated_at
-        );
+            return new Ecopoint(
+                ecopoint.id,
+                ecopoint.name,
+                AcceptedMaterials.fromString(ecopoint.accepted_materials),
+                new Address({
+                    street: ecopoint.street,
+                    number: ecopoint.number ?? undefined,
+                    complement: ecopoint.complement ?? undefined,
+                    postalCode: ecopoint.postal_code ? new PostalCode(ecopoint.postal_code) : undefined,
+                    geoLocation: (ecopoint.latitude !== null && ecopoint.longitude !== null)
+                        ? new GeoLocation(ecopoint.latitude, ecopoint.longitude)
+                        : undefined,
+                }),
+                CollectionDays.fromString(ecopoint.collection_days),
+                this.parseCollectionTime(ecopoint.collection_time),
+                ecopoint.neighborhood_id,
+                ecopoint.admin_id_created,
+                ecopoint.admin_id_updated,
+                ecopoint.created_at,
+                ecopoint.updated_at
+            );
+        } catch (error: any) {
+            if (error instanceof EntityNotFoundError) throw error;
+            throw new PersistenceError(`Erro ao buscar ecoponto por ID: ${error.message}`);
+        }
     }
 
     async findAll(): Promise<Ecopoint[]> {
-        const ecopoints = await this.prisma.ecopoint.findMany();
+        try {
+            const ecopoints = await this.prisma.ecopoint.findMany();
 
-        return ecopoints.map(
-            (ecopoint) =>
-                new Ecopoint(
-                    ecopoint.id,
-                    ecopoint.name,
-                    AcceptedMaterials.fromString(ecopoint.accepted_materials),
-                    new Address({
-                        street: ecopoint.street,
-                        number: ecopoint.number ?? undefined,
-                        complement: ecopoint.complement ?? undefined,
-                        postalCode: ecopoint.postal_code ? new PostalCode(ecopoint.postal_code) : undefined,
-                        geoLocation: (ecopoint.latitude !== null && ecopoint.longitude !== null)
-                            ? new GeoLocation(ecopoint.latitude, ecopoint.longitude)
-                            : undefined,
-                    }),
-                    CollectionDays.fromString(ecopoint.collection_days),
-                    this.parseCollectionTime(ecopoint.collection_time),
-                    ecopoint.neighborhood_id,
-                    ecopoint.admin_id_created,
-                    ecopoint.admin_id_updated,
-                    ecopoint.created_at,
-                    ecopoint.updated_at
-                )
-        );
+            return ecopoints.map(
+                (ecopoint) =>
+                    new Ecopoint(
+                        ecopoint.id,
+                        ecopoint.name,
+                        AcceptedMaterials.fromString(ecopoint.accepted_materials),
+                        new Address({
+                            street: ecopoint.street,
+                            number: ecopoint.number ?? undefined,
+                            complement: ecopoint.complement ?? undefined,
+                            postalCode: ecopoint.postal_code ? new PostalCode(ecopoint.postal_code) : undefined,
+                            geoLocation: (ecopoint.latitude !== null && ecopoint.longitude !== null)
+                                ? new GeoLocation(ecopoint.latitude, ecopoint.longitude)
+                                : undefined,
+                        }),
+                        CollectionDays.fromString(ecopoint.collection_days),
+                        this.parseCollectionTime(ecopoint.collection_time),
+                        ecopoint.neighborhood_id,
+                        ecopoint.admin_id_created,
+                        ecopoint.admin_id_updated,
+                        ecopoint.created_at,
+                        ecopoint.updated_at
+                    )
+            );
+        } catch (error: any) {
+            throw new PersistenceError(`Erro ao buscar todos os ecopontos: ${error.message}`);
+        }
     }
 
     async findByNeighborhoodId(neighborhoodId: number): Promise<Ecopoint[]> {
-        const ecopoints = await this.prisma.ecopoint.findMany({
-            where: { neighborhood_id: neighborhoodId },
-        });
+        try {
+            const ecopoints = await this.prisma.ecopoint.findMany({
+                where: { neighborhood_id: neighborhoodId },
+            });
 
-        return ecopoints.map(
-            (ecopoint) =>
-                new Ecopoint(
-                    ecopoint.id,
-                    ecopoint.name,
-                    AcceptedMaterials.fromString(ecopoint.accepted_materials),
-                    new Address({
-                        street: ecopoint.street,
-                        number: ecopoint.number ?? undefined,
-                        complement: ecopoint.complement ?? undefined,
-                        postalCode: ecopoint.postal_code ? new PostalCode(ecopoint.postal_code) : undefined,
-                        geoLocation: (ecopoint.latitude !== null && ecopoint.longitude !== null)
-                            ? new GeoLocation(ecopoint.latitude, ecopoint.longitude)
-                            : undefined,
-                    }),
-                    CollectionDays.fromString(ecopoint.collection_days),
-                    this.parseCollectionTime(ecopoint.collection_time),
-                    ecopoint.neighborhood_id,
-                    ecopoint.admin_id_created,
-                    ecopoint.admin_id_updated,
-                    ecopoint.created_at,
-                    ecopoint.updated_at
-                )
-        );
+            return ecopoints.map(
+                (ecopoint) =>
+                    new Ecopoint(
+                        ecopoint.id,
+                        ecopoint.name,
+                        AcceptedMaterials.fromString(ecopoint.accepted_materials),
+                        new Address({
+                            street: ecopoint.street,
+                            number: ecopoint.number ?? undefined,
+                            complement: ecopoint.complement ?? undefined,
+                            postalCode: ecopoint.postal_code ? new PostalCode(ecopoint.postal_code) : undefined,
+                            geoLocation: (ecopoint.latitude !== null && ecopoint.longitude !== null)
+                                ? new GeoLocation(ecopoint.latitude, ecopoint.longitude)
+                                : undefined,
+                        }),
+                        CollectionDays.fromString(ecopoint.collection_days),
+                        this.parseCollectionTime(ecopoint.collection_time),
+                        ecopoint.neighborhood_id,
+                        ecopoint.admin_id_created,
+                        ecopoint.admin_id_updated,
+                        ecopoint.created_at,
+                        ecopoint.updated_at
+                    )
+            );
+        } catch (error: any) {
+            throw new PersistenceError(`Erro ao buscar ecopontos por bairro: ${error.message}`);
+        }
     }
 
     async update(id: number, data: Partial<Omit<Ecopoint, "id" | "createdAt">>): Promise<Ecopoint> {
-        const updatedEcopoint = await this.prisma.ecopoint.update({
-            where: { id },
-            data: {
-                name: data.name,
-                street: data.address?.getStreet(),
-                number: data.address?.getNumber(),
-                complement: data.address?.getComplement(),
-                postal_code: data.address?.getPostalCode()?.getValue(),
-                latitude: data.address?.getGeoLocation()?.getLatitude(),
-                longitude: data.address?.getGeoLocation()?.getLongitude(),
-                accepted_materials: data.acceptedMaterials?.toString(),
-                collection_days: data.collectionDays?.toString(),
-                collection_time: data.collectionTime?.getFormattedInterval(),
-                neighborhood_id: data.neighborhoodId,
-                admin_id_created: data.adminIdCreated,
-                admin_id_updated: data.adminIdUpdated,
-            },
-        });
+        try {
+            const updatedEcopoint = await this.prisma.ecopoint.update({
+                where: { id },
+                data: {
+                    name: data.name,
+                    street: data.address?.getStreet(),
+                    number: data.address?.getNumber(),
+                    complement: data.address?.getComplement(),
+                    postal_code: data.address?.getPostalCode()?.getValue(),
+                    latitude: data.address?.getGeoLocation()?.getLatitude(),
+                    longitude: data.address?.getGeoLocation()?.getLongitude(),
+                    accepted_materials: data.acceptedMaterials?.toString(),
+                    collection_days: data.collectionDays?.toString(),
+                    collection_time: data.collectionTime?.getFormattedInterval(),
+                    neighborhood_id: data.neighborhoodId,
+                    admin_id_created: data.adminIdCreated,
+                    admin_id_updated: data.adminIdUpdated,
+                },
+            });
 
-        return new Ecopoint(
-            updatedEcopoint.id,
-            updatedEcopoint.name,
-            AcceptedMaterials.fromString(updatedEcopoint.accepted_materials),
-            new Address({
-                street: updatedEcopoint.street,
-                number: updatedEcopoint.number ?? undefined,
-                complement: updatedEcopoint.complement ?? undefined,
-                postalCode: updatedEcopoint.postal_code ? new PostalCode(updatedEcopoint.postal_code) : undefined,
-                geoLocation: (updatedEcopoint.latitude !== null && updatedEcopoint.longitude !== null)
-                    ? new GeoLocation(updatedEcopoint.latitude, updatedEcopoint.longitude)
-                    : undefined,
-            }),
-            CollectionDays.fromString(updatedEcopoint.collection_days),
-            this.parseCollectionTime(updatedEcopoint.collection_time),
-            updatedEcopoint.neighborhood_id,
-            updatedEcopoint.admin_id_created,
-            updatedEcopoint.admin_id_updated,
-            updatedEcopoint.created_at,
-            updatedEcopoint.updated_at
-        );
+            return new Ecopoint(
+                updatedEcopoint.id,
+                updatedEcopoint.name,
+                AcceptedMaterials.fromString(updatedEcopoint.accepted_materials),
+                new Address({
+                    street: updatedEcopoint.street,
+                    number: updatedEcopoint.number ?? undefined,
+                    complement: updatedEcopoint.complement ?? undefined,
+                    postalCode: updatedEcopoint.postal_code ? new PostalCode(updatedEcopoint.postal_code) : undefined,
+                    geoLocation: (updatedEcopoint.latitude !== null && updatedEcopoint.longitude !== null)
+                        ? new GeoLocation(updatedEcopoint.latitude, updatedEcopoint.longitude)
+                        : undefined,
+                }),
+                CollectionDays.fromString(updatedEcopoint.collection_days),
+                this.parseCollectionTime(updatedEcopoint.collection_time),
+                updatedEcopoint.neighborhood_id,
+                updatedEcopoint.admin_id_created,
+                updatedEcopoint.admin_id_updated,
+                updatedEcopoint.created_at,
+                updatedEcopoint.updated_at
+            );
+        } catch (error: any) {
+            if (error.code === 'P2025') {
+                throw new EntityNotFoundError("Ecoponto", id);
+            }
+            if (error.code === 'P2002') {
+                throw new ConflictError(`Já existe um ecoponto com estes dados.`);
+            }
+            throw new PersistenceError(`Erro ao atualizar ecoponto: ${error.message}`);
+        }
     }
 
     async delete(id: number): Promise<void> {
-        await this.prisma.ecopoint.delete({
-            where: { id },
-        });
+        try {
+            await this.prisma.ecopoint.delete({
+                where: { id },
+            });
+        } catch (error: any) {
+            if (error.code === 'P2025') {
+                throw new EntityNotFoundError("Ecoponto", id);
+            }
+            throw new PersistenceError(`Erro ao deletar ecoponto: ${error.message}`);
+        }
     }
 }
