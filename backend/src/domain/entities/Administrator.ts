@@ -5,8 +5,8 @@ export class Administrator {
     public readonly id: number,
     public name: string,
     public email: Email,
-    public password?: string,
-    public readonly creationDate?: Date,
-    public readonly updateDate?: Date
+    public password: string,
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date
   ) { }
 }
