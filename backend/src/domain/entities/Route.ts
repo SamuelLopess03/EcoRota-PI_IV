@@ -9,8 +9,8 @@ export class Route {
     public collectionDays: CollectionDays,
     public collectionTime: CollectionTime,
     public collectionType: CollectionType,
-    public createdAt: Date,
-    public updatedAt: Date,
+    public readonly createdAt: Date,
+    public readonly updatedAt: Date,
     public adminIdCreated: number,
     public adminIdUpdated: number | null
   ) { }
