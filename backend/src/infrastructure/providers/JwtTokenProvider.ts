@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { TokenProvider } from "../../domain/providers/TokenProvider.js";
-import { InvalidTokenError } from "../../domain/errors/security/InvalidTokenError.js";
-import { SecurityError } from "../../domain/errors/security/SecurityError.js";
+import { InvalidTokenError } from "../../domain/errors/providers/InvalidTokenError.js";
+import { ProviderError } from "../../domain/errors/providers/ProviderError.js";
 
 export class JwtTokenProvider implements TokenProvider {
   private readonly secret: string;
@@ -12,7 +12,7 @@ export class JwtTokenProvider implements TokenProvider {
     this.defaultExpiresIn = process.env.JWT_EXPIRE || "1d";
     
     if (!process.env.JWT_SECRET && process.env.NODE_ENV === "production") {
-      throw new SecurityError("JWT_SECRET deve ser definido em ambiente de produção");
+      throw new ProviderError("JWT_SECRET deve ser definido em ambiente de produção");
     }
   }
 
@@ -22,7 +22,7 @@ export class JwtTokenProvider implements TokenProvider {
         expiresIn: (expiresIn || this.defaultExpiresIn) as any,
       });
     } catch (error: any) {
-      throw new SecurityError(`Erro ao gerar token: ${error.message}`, error);
+      throw new ProviderError(`Erro ao gerar token: ${error.message}`, error);
     }
   }
 
@@ -45,7 +45,7 @@ export class JwtTokenProvider implements TokenProvider {
       if (error instanceof InvalidTokenError) {
         throw error;
       }
-      throw new SecurityError(`Erro técnico na validação do token: ${error.message}`, error);
+      throw new ProviderError(`Erro técnico na validação do token: ${error.message}`, error);
     }
   }
 }

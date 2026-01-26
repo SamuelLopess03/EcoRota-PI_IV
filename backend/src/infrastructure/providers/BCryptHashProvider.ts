@@ -1,10 +1,7 @@
 import bcrypt from "bcrypt";
 import { HashProvider } from "../../domain/providers/HashProvider.js";
-import { HashingError } from "../../domain/errors/infrastructure/HashingError.js";
+import { HashingError } from "../../domain/errors/providers/HashingError.js";
 
-/**
- * Implementação do HashProvider utilizando a biblioteca BCrypt.
- */
 export class BCryptHashProvider implements HashProvider {
     private readonly saltRounds = 10;
 
@@ -12,7 +9,7 @@ export class BCryptHashProvider implements HashProvider {
         try {
             return await bcrypt.hash(payload, this.saltRounds);
         } catch (error) {
-            throw new HashingError("Falha ao gerar hash de segurança.");
+            throw new HashingError("Falha ao gerar hash de segurança.", error);
         }
     }
 
@@ -20,7 +17,7 @@ export class BCryptHashProvider implements HashProvider {
         try {
             return await bcrypt.compare(payload, hashed);
         } catch (error) {
-            throw new HashingError("Falha ao validar credenciais cifradas.");
+            throw new HashingError("Falha ao validar credenciais cifradas.", error);
         }
     }
 }

@@ -10,7 +10,6 @@ export interface AdministratorRepository {
   
   /**
    * Retorna null se o administrador não for encontrado.
-   * @description Retorna null se o administrador não for encontrado.
    * @throws {PersistenceError} Se ocorrer uma falha técnica na persistência.
    */
   findByEmail(email: Email): Promise<Administrator | null>;
