@@ -15,6 +15,10 @@ app.use(
 
 app.use(express.json());
 
+// Rotas do Administrador
+import { administratorRoutes } from "./infrastructure/http/routes/administratorRoutes.js";
+app.use(administratorRoutes);
+
 // Rota de Health Check
 app.get("/ping", (req, res) => {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });

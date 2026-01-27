@@ -24,8 +24,8 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
         createdAdmin.name,
         new Email(createdAdmin.email),
         createdAdmin.password,
-        createdAdmin.created_at,
-        createdAdmin.updated_at
+        createdAdmin.creation_date,
+        createdAdmin.update_date
       );
     } catch (error: any) {
       if (error.code === 'P2002') {
@@ -48,8 +48,8 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
         admin.name,
         new Email(admin.email),
         admin.password,
-        admin.created_at,
-        admin.updated_at
+        admin.creation_date,
+        admin.update_date
       );
     } catch (error: any) {
       throw new PersistenceError(`Erro ao buscar administrador por e-mail: ${error.message}`);
@@ -71,8 +71,8 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
         admin.name,
         new Email(admin.email),
         admin.password,
-        admin.created_at,
-        admin.updated_at
+        admin.creation_date,
+        admin.update_date
       );
     } catch (error: any) {
       if (error instanceof EntityNotFoundError) throw error;
@@ -91,8 +91,8 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
             admin.name,
             new Email(admin.email),
             admin.password,
-            admin.created_at,
-            admin.updated_at
+            admin.creation_date,
+            admin.update_date
           )
       );
     } catch (error: any) {
@@ -116,8 +116,8 @@ export class PrismaAdministratorRepository implements AdministratorRepository {
         updatedAdmin.name,
         new Email(updatedAdmin.email),
         updatedAdmin.password,
-        updatedAdmin.created_at,
-        updatedAdmin.updated_at
+        updatedAdmin.creation_date,
+        updatedAdmin.update_date
       );
     } catch (error: any) {
       if (error.code === 'P2025') {
