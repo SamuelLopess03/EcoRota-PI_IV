@@ -16,7 +16,7 @@ app.use(
 app.use(express.json());
 
 // Rotas do Administrador
-import { administratorRoutes } from "./infrastructure/http/routes/administratorRoutes.js";
+import { administratorRoutes } from "./presentation/routes/administratorRoutes.js";
 app.use(administratorRoutes);
 
 // Rota de Health Check

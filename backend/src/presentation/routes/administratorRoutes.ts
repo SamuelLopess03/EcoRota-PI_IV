@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { AdministratorController } from "../controllers/AdministratorController.js";
-import { CreateAdministratorUseCase } from "../../../application/use-cases/administrator/CreateAdministratorUseCase.js";
-import { AuthenticateAdministratorUseCase } from "../../../application/use-cases/administrator/AuthenticateAdministratorUseCase.js";
-import { ListAdministratorsUseCase } from "../../../application/use-cases/administrator/ListAdministratorsUseCase.js";
-import { PrismaAdministratorRepository } from "../../database/prisma/PrismaAdministratorRepository.js";
-import { prisma } from "../../database/prismaClient.js";
-import { BCryptHashProvider } from "../../providers/BCryptHashProvider.js";
-import { JwtTokenProvider } from "../../providers/JwtTokenProvider.js";
+import { CreateAdministratorUseCase } from "../../application/use-cases/administrator/CreateAdministratorUseCase.js";
+import { AuthenticateAdministratorUseCase } from "../../application/use-cases/administrator/AuthenticateAdministratorUseCase.js";
+import { ListAdministratorsUseCase } from "../../application/use-cases/administrator/ListAdministratorsUseCase.js";
+import { PrismaAdministratorRepository } from "../../infrastructure/database/prisma/PrismaAdministratorRepository.js";
+import { prisma } from "../../infrastructure/database/prismaClient.js";
+import { BCryptHashProvider } from "../../infrastructure/providers/BCryptHashProvider.js";
+import { JwtTokenProvider } from "../../infrastructure/providers/JwtTokenProvider.js";
 
 const administratorRoutes = Router();
 

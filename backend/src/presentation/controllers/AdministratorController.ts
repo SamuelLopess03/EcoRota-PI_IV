@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { CreateAdministratorUseCase } from "../../../application/use-cases/administrator/CreateAdministratorUseCase.js";
-import { AuthenticateAdministratorUseCase } from "../../../application/use-cases/administrator/AuthenticateAdministratorUseCase.js";
-import { ListAdministratorsUseCase } from "../../../application/use-cases/administrator/ListAdministratorsUseCase.js";
+import { CreateAdministratorUseCase } from "../../application/use-cases/administrator/CreateAdministratorUseCase.js";
+import { AuthenticateAdministratorUseCase } from "../../application/use-cases/administrator/AuthenticateAdministratorUseCase.js";
+import { ListAdministratorsUseCase } from "../../application/use-cases/administrator/ListAdministratorsUseCase.js";
 
 const createAdministratorSchema = z.object({
     name: z.string().min(3).max(255),
