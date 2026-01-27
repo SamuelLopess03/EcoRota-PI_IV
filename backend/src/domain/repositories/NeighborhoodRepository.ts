@@ -25,6 +25,7 @@ export interface NeighborhoodRepository {
     
     /**
      * @throws {EntityNotFoundError} Se o bairro não existir para atualização.
+     * @throws {ConflictError} Se houver conflito de nome ou localização geográfica.
      * @throws {PersistenceError} Se ocorrer uma falha técnica na persistência.
      */
     update(id: number, data: Partial<Omit<Neighborhood, "id" | "createdAt">>): Promise<Neighborhood>;
