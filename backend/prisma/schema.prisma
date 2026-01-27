@@ -8,136 +8,130 @@ datasource ecorota {
 }
 
 model Administrador {
-  id            Int      @id @default(autoincrement())
-  name          String
-  email         String   @unique
-  password      String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id                    Int               @id @default(autoincrement())
+  name                  String
+  email                 String            @unique
+  password              String
+  creation_date         DateTime          @default(now())
+  update_date           DateTime          @updatedAt
 
-  created_routes        Route[]        @relation("RouteCreatedBy")
-  updated_routes        Route[]        @relation("RouteUpdatedBy")
-  created_neighborhoods Neighborhood[] @relation("NeighborhoodCreatedBy")
-  updated_neighborhoods Neighborhood[] @relation("NeighborhoodUpdatedBy")
-  created_ecopoints     Ecopoint[]     @relation("EcopointCreatedBy")
-  updated_ecopoints     Ecopoint[]     @relation("EcopointUpdatedBy")
+  created_ecopoints     Ecopoint[]        @relation("EcopointCreatedBy")
+  updated_ecopoints     Ecopoint[]        @relation("EcopointUpdatedBy")
+  created_neighborhoods Neighborhood[]    @relation("NeighborhoodCreatedBy")
+  updated_neighborhoods Neighborhood[]    @relation("NeighborhoodUpdatedBy")
   resolved_problems     ReportedProblem[] @relation("ProblemResolvedBy")
+  created_routes        Route[]           @relation("RouteCreatedBy")
+  updated_routes        Route[]           @relation("RouteUpdatedBy")
 
   @@map("administradores")
 }
 
 model Route {
-  id              Int      @id @default(autoincrement())
-  name            String
-  collection_days String
-  collection_type String
-  collection_time String
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-
+  id               Int            @id @default(autoincrement())
+  name             String
+  collection_type  String
+  created_at       DateTime       @default(now())
+  updated_at       DateTime       @updatedAt
   admin_id_created Int
-  created_by       Administrador @relation("RouteCreatedBy", fields: [admin_id_created], references: [id])
-
   admin_id_updated Int?
+  collection_days  String
+  collection_time  String
+  neighborhoods    Neighborhood[]
+  created_by       Administrador  @relation("RouteCreatedBy", fields: [admin_id_created], references: [id])
   updated_by       Administrador? @relation("RouteUpdatedBy", fields: [admin_id_updated], references: [id])
 
-  neighborhoods Neighborhood[]
-
+  @@index([admin_id_created], map: "routes_admin_id_created_fkey")
+  @@index([admin_id_updated], map: "routes_admin_id_updated_fkey")
   @@map("routes")
 }
 
 model Neighborhood {
-  id                  Int      @id @default(autoincrement())
+  id                  Int            @id @default(autoincrement())
   name                String
   latitude            Float
   longitude           Float
   cep                 String
   population_estimate Int?
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  created_at          DateTime       @default(now())
+  updated_at          DateTime       @updatedAt
+  route_id            Int
+  admin_id_created    Int
+  admin_id_updated    Int?
+  ecopoints           Ecopoint[]
+  created_by          Administrador  @relation("NeighborhoodCreatedBy", fields: [admin_id_created], references: [id])
+  updated_by          Administrador? @relation("NeighborhoodUpdatedBy", fields: [admin_id_updated], references: [id])
+  route               Route          @relation(fields: [route_id], references: [id])
+  subscribers         Subscriber[]
 
-  route_id Int
-  route    Route @relation(fields: [route_id], references: [id])
-
-  admin_id_created Int
-  created_by       Administrador @relation("NeighborhoodCreatedBy", fields: [admin_id_created], references: [id])
-
-  admin_id_updated Int?
-  updated_by       Administrador? @relation("NeighborhoodUpdatedBy", fields: [admin_id_updated], references: [id])
-
-  subscribers Subscriber[]
-  ecopoints   Ecopoint[]
-
+  @@index([admin_id_created], map: "neighborhoods_admin_id_created_fkey")
+  @@index([admin_id_updated], map: "neighborhoods_admin_id_updated_fkey")
+  @@index([route_id], map: "neighborhoods_route_id_fkey")
   @@map("neighborhoods")
 }
 
 model Subscriber {
-  id         Int      @id @default(autoincrement())
-  email      String   @unique
-  street     String
-  number     String?
-  complement String?
-  postal_code String?
-  latitude   Float?
-  longitude  Float?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  neighborhood_id Int
-  neighborhood    Neighborhood @relation(fields: [neighborhood_id], references: [id])
-
+  id                Int               @id @default(autoincrement())
+  email             String            @unique
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @updatedAt
+  neighborhood_id   Int
+  complement        String?
+  latitude          Float?
+  longitude         Float?
+  number            String?
+  postal_code       String?
+  street            String
   reported_problems ReportedProblem[]
+  neighborhood      Neighborhood      @relation(fields: [neighborhood_id], references: [id])
 
   @@index([neighborhood_id])
   @@map("subscribers")
 }
 
 model Ecopoint {
-  id                 Int      @id @default(autoincrement())
+  id                 Int            @id @default(autoincrement())
   name               String
-  street             String
-  number             String?
-  complement         String?
-  postal_code        String?
-  latitude           Float?
-  longitude          Float?
   accepted_materials String
   collection_days    String
   collection_time    String
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
-
-  neighborhood_id Int
-  neighborhood    Neighborhood @relation(fields: [neighborhood_id], references: [id])
-
-  admin_id_created Int
-  created_by       Administrador @relation("EcopointCreatedBy", fields: [admin_id_created], references: [id])
-
-  admin_id_updated Int?
-  updated_by       Administrador? @relation("EcopointUpdatedBy", fields: [admin_id_updated], references: [id])
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
+  neighborhood_id    Int
+  admin_id_created   Int
+  admin_id_updated   Int?
+  complement         String?
+  latitude           Float?
+  longitude          Float?
+  number             String?
+  postal_code        String?
+  street             String
+  created_by         Administrador  @relation("EcopointCreatedBy", fields: [admin_id_created], references: [id])
+  updated_by         Administrador? @relation("EcopointUpdatedBy", fields: [admin_id_updated], references: [id])
+  neighborhood       Neighborhood   @relation(fields: [neighborhood_id], references: [id])
 
   @@index([neighborhood_id])
+  @@index([admin_id_created], map: "ecopoints_admin_id_created_fkey")
+  @@index([admin_id_updated], map: "ecopoints_admin_id_updated_fkey")
   @@map("ecopoints")
 }
 
 model ReportedProblem {
-  id                 Int      @id @default(autoincrement())
-  problem_type       String
-  description        String
-  status             String
-  url_attachments    String
-  protocol           String
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
-
-  subscriber_id Int
-  subscriber    Subscriber @relation(fields: [subscriber_id], references: [id])
-
+  id                   Int            @id @default(autoincrement())
+  problem_type         String
+  description          String
+  status               String
+  url_attachments      String
+  protocol             String
+  created_at           DateTime       @default(now())
+  updated_at           DateTime       @updatedAt
+  subscriber_id        Int
   resolved_by_admin_id Int?
   resolved_by          Administrador? @relation("ProblemResolvedBy", fields: [resolved_by_admin_id], references: [id])
+  subscriber           Subscriber     @relation(fields: [subscriber_id], references: [id])
 
   @@index([status])
   @@index([protocol])
   @@index([subscriber_id])
+  @@index([resolved_by_admin_id], map: "reported_problems_resolved_by_admin_id_fkey")
   @@map("reported_problems")
 }

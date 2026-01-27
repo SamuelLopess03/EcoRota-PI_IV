@@ -9,10 +9,12 @@ const config: Config = {
   },
   testMatch: ["<rootDir>/tests/**/*.test.ts"],
 
-  // CRÍTICO: isso resolve o problema dos imports ".js" no seu src
+  setupFiles: ["<rootDir>/tests/setup-env.cjs"],
+
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
 };
+
 
 export default config;
