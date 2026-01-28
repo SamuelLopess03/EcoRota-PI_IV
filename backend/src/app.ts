@@ -30,6 +30,10 @@ app.use(routeRoutes);
 import { neighborhoodRoutes } from "./presentation/routes/neighborhoodRoutes.js";
 app.use(neighborhoodRoutes);
 
+// Rotas de Ecopontos (Ecopoints)
+import { ecopointRoutes } from "./presentation/routes/ecopointRoutes.js";
+app.use(ecopointRoutes);
+
 // Rota de Health Check
 app.get("/ping", (req, res) => {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
