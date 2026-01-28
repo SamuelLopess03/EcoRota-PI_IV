@@ -1,10 +1,7 @@
 export interface CreateEcopointInputDTO {
   name: string;
+  partnerName?: string;
   materials: string[];
-  street: string;
-  number?: string;
-  complement?: string;
-  postalCode?: string;
   latitude: number;
   longitude: number;
   collectionDays: string[];
@@ -17,12 +14,9 @@ export interface CreateEcopointInputDTO {
 export interface CreateEcopointOutputDTO {
   id: number;
   name: string;
+  partnerName: string | null;
   materials: string[];
   materialsLocalized: string;
-  street: string;
-  number?: string;
-  complement?: string;
-  postalCode?: string;
   latitude: number;
   longitude: number;
   collectionDays: string[];

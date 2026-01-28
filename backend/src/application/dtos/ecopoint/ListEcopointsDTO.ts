@@ -1,12 +1,9 @@
 export interface ListEcopointsOutputDTO {
   id: number;
   name: string;
+  partnerName: string | null;
   materials: string[];
   materialsLocalized: string;
-  street: string;
-  number?: string;
-  complement?: string;
-  postalCode?: string;
   latitude: number;
   longitude: number;
   collectionDays: string[];

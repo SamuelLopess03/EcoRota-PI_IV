@@ -9,11 +9,8 @@ import { AuthenticatedRequest } from "../../infrastructure/http/middlewares/Ensu
 
 const createEcopointSchema = z.object({
     name: z.string().min(3).max(255),
+    partnerName: z.string().max(255).optional(),
     materials: z.array(z.string()).min(1),
-    street: z.string().min(3).max(255),
-    number: z.string().max(20).optional(),
-    complement: z.string().max(255).optional(),
-    postalCode: z.string().length(8).optional(),
     latitude: z.number().min(-90).max(90),
     longitude: z.number().min(-180).max(180),
     collectionDays: z.array(z.string()).min(1),
@@ -24,11 +21,8 @@ const createEcopointSchema = z.object({
 
 const updateEcopointSchema = z.object({
     name: z.string().min(3).max(255).optional(),
+    partnerName: z.string().max(255).optional(),
     materials: z.array(z.string()).min(1).optional(),
-    street: z.string().min(3).max(255).optional(),
-    number: z.string().max(20).optional(),
-    complement: z.string().max(255).optional(),
-    postalCode: z.string().length(8).optional(),
     latitude: z.number().min(-90).max(90).optional(),
     longitude: z.number().min(-180).max(180).optional(),
     collectionDays: z.array(z.string()).min(1).optional(),

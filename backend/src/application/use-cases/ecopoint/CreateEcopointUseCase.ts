@@ -3,8 +3,6 @@ import { NeighborhoodRepository } from "../../../domain/repositories/Neighborhoo
 import { CreateEcopointInputDTO, CreateEcopointOutputDTO } from "../../dtos/ecopoint/CreateEcopointDTO.js";
 import { AcceptedMaterials } from "../../../domain/value-objects/AcceptedMaterials.js";
 import { MaterialType } from "../../../domain/value-objects/MaterialType.js";
-import { Address } from "../../../domain/value-objects/Address.js";
-import { PostalCode } from "../../../domain/value-objects/PostalCode.js";
 import { GeoLocation } from "../../../domain/value-objects/GeoLocation.js";
 import { CollectionDays } from "../../../domain/value-objects/CollectionDays.js";
 import { WeekDay } from "../../../domain/value-objects/WeekDay.js";
@@ -26,9 +24,7 @@ export class CreateEcopointUseCase {
    * @returns DTO com os dados do ecoponto criado.
    * @throws {EntityNotFoundError} Se o bairro não existir.
    * @throws {ConflictError} Se o ecoponto já existir.
-   * @throws {InvalidAddressError} Se o endereço for inválido.
    * @throws {InvalidAcceptedMaterialsError} Se os materiais forem inválidos.
-   * @throws {InvalidPostalCodeError} Se o CEP for inválido.
    * @throws {InvalidGeoLocationError} Se a localização for inválida.
    * @throws {InvalidCollectionDaysError} Se os dias forem inválidos.
    * @throws {InvalidCollectionTimeError} Se os horários forem inválidos.
@@ -38,29 +34,15 @@ export class CreateEcopointUseCase {
     await this.neighborhoodRepository.findById(input.neighborhoodId);
 
     const acceptedMaterials = new AcceptedMaterials(input.materials as MaterialType[]);
-    
-    let postalCode: PostalCode | undefined;
-    if (input.postalCode) {
-      postalCode = new PostalCode(input.postalCode);
-    }
-
     const geoLocation = new GeoLocation(input.latitude, input.longitude);
-
-    const address = new Address({
-      street: input.street,
-      number: input.number,
-      complement: input.complement,
-      postalCode,
-      geoLocation
-    });
-
     const collectionDays = new CollectionDays(input.collectionDays as WeekDay[]);
     const collectionTime = new CollectionTime(input.startTime, input.endTime);
 
     const ecopoint = await this.ecopointRepository.create({
       name: input.name,
+      partnerName: input.partnerName || null,
       acceptedMaterials,
-      address,
+      geoLocation,
       collectionDays,
       collectionTime,
       neighborhoodId: input.neighborhoodId,
@@ -71,14 +53,11 @@ export class CreateEcopointUseCase {
     return {
       id: ecopoint.id,
       name: ecopoint.name,
+      partnerName: ecopoint.partnerName,
       materials: ecopoint.acceptedMaterials.getMaterials() as string[],
       materialsLocalized: ecopoint.acceptedMaterials.toLocalizedString(),
-      street: ecopoint.address.getStreet(),
-      number: ecopoint.address.getNumber(),
-      complement: ecopoint.address.getComplement(),
-      postalCode: ecopoint.address.getPostalCode()?.getValue(),
-      latitude: ecopoint.address.getGeoLocation()!.getLatitude(),
-      longitude: ecopoint.address.getGeoLocation()!.getLongitude(),
+      latitude: ecopoint.geoLocation.getLatitude(),
+      longitude: ecopoint.geoLocation.getLongitude(),
       collectionDays: ecopoint.collectionDays.getDays() as string[],
       collectionDaysLocalized: ecopoint.collectionDays.toLocalizedString(),
       startTime: ecopoint.collectionTime.getStartTime(),

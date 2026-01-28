@@ -3,7 +3,6 @@ import { NeighborhoodRepository } from "../../../domain/repositories/Neighborhoo
 import { UpdateEcopointInputDTO, UpdateEcopointOutputDTO } from "../../dtos/ecopoint/UpdateEcopointDTO.js";
 import { AcceptedMaterials } from "../../../domain/value-objects/AcceptedMaterials.js";
 import { MaterialType } from "../../../domain/value-objects/MaterialType.js";
-import { PostalCode } from "../../../domain/value-objects/PostalCode.js";
 import { GeoLocation } from "../../../domain/value-objects/GeoLocation.js";
 import { CollectionDays } from "../../../domain/value-objects/CollectionDays.js";
 import { WeekDay } from "../../../domain/value-objects/WeekDay.js";
@@ -25,9 +24,7 @@ export class UpdateEcopointUseCase {
    * @param input Dados para atualização.
    * @returns DTO com os dados do ecoponto atualizado.
    * @throws {EntityNotFoundError} Se o ecoponto ou o bairro informado não existirem.
-   * @throws {InvalidAddressError} Se o endereço for inválido.
    * @throws {InvalidAcceptedMaterialsError} Se os materiais forem inválidos.
-   * @throws {InvalidPostalCodeError} Se o CEP for inválido.
    * @throws {InvalidGeoLocationError} Se a localização for inválida.
    * @throws {InvalidCollectionDaysError} Se os dias forem inválidos.
    * @throws {InvalidCollectionTimeError} Se os horários forem inválidos.
@@ -44,6 +41,7 @@ export class UpdateEcopointUseCase {
     };
 
     if (input.name) dataToUpdate.name = input.name;
+    if (input.partnerName !== undefined) dataToUpdate.partnerName = input.partnerName || null;
 
     if (input.materials) {
       dataToUpdate.acceptedMaterials = new AcceptedMaterials(input.materials as MaterialType[]);
@@ -63,30 +61,10 @@ export class UpdateEcopointUseCase {
       dataToUpdate.collectionTime = new CollectionTime(start, end);
     }
 
-    if (
-      input.street ||
-      input.number ||
-      input.complement ||
-      input.postalCode ||
-      (input.latitude !== undefined && input.longitude !== undefined)
-    ) {
-      let newPostalCode = currentEcopoint.address.getPostalCode();
-      if (input.postalCode) {
-        newPostalCode = new PostalCode(input.postalCode);
-      }
-
-      let newGeoLocation = currentEcopoint.address.getGeoLocation();
-      if (input.latitude !== undefined && input.longitude !== undefined) {
-        newGeoLocation = new GeoLocation(input.latitude, input.longitude);
-      }
-
-      dataToUpdate.address = currentEcopoint.address.withChanges({
-        street: input.street,
-        number: input.number,
-        complement: input.complement,
-        postalCode: newPostalCode,
-        geoLocation: newGeoLocation
-      });
+    if (input.latitude !== undefined || input.longitude !== undefined) {
+      const lat = input.latitude ?? currentEcopoint.geoLocation.getLatitude();
+      const lng = input.longitude ?? currentEcopoint.geoLocation.getLongitude();
+      dataToUpdate.geoLocation = new GeoLocation(lat, lng);
     }
 
     const updatedEcopoint = await this.ecopointRepository.update(id, dataToUpdate);
@@ -94,14 +72,11 @@ export class UpdateEcopointUseCase {
     return {
       id: updatedEcopoint.id,
       name: updatedEcopoint.name,
+      partnerName: updatedEcopoint.partnerName,
       materials: updatedEcopoint.acceptedMaterials.getMaterials() as string[],
       materialsLocalized: updatedEcopoint.acceptedMaterials.toLocalizedString(),
-      street: updatedEcopoint.address.getStreet(),
-      number: updatedEcopoint.address.getNumber(),
-      complement: updatedEcopoint.address.getComplement(),
-      postalCode: updatedEcopoint.address.getPostalCode()?.getValue(),
-      latitude: updatedEcopoint.address.getGeoLocation()!.getLatitude(),
-      longitude: updatedEcopoint.address.getGeoLocation()!.getLongitude(),
+      latitude: updatedEcopoint.geoLocation.getLatitude(),
+      longitude: updatedEcopoint.geoLocation.getLongitude(),
       collectionDays: updatedEcopoint.collectionDays.getDays() as string[],
       collectionDaysLocalized: updatedEcopoint.collectionDays.toLocalizedString(),
       startTime: updatedEcopoint.collectionTime.getStartTime(),
