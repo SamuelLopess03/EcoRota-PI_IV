@@ -22,9 +22,20 @@ app.use(administratorRoutes);
 // Rotas de Assinantes (Subscribers)
 import { subscriberRoutes } from "./presentation/routes/subscriberRoutes.js";
 app.use(subscriberRoutes);
+
+// Rotas de Relatos de Problemas (ProblemReports)
+import { problemReportRoutes } from "./presentation/routes/problemReportRoutes.js";
+app.use(problemReportRoutes);
+// Rotas de Coleta (Routes)
+import { routeRoutes } from "./presentation/routes/routeRoutes.js";
+app.use(routeRoutes);
 // Rotas de Bairros (Neighborhoods)
 import { neighborhoodRoutes } from "./presentation/routes/neighborhoodRoutes.js";
 app.use(neighborhoodRoutes);
+
+// Rotas de Ecopontos (Ecopoints)
+import { ecopointRoutes } from "./presentation/routes/ecopointRoutes.js";
+app.use(ecopointRoutes);
 
 // Rota de Health Check
 app.get("/ping", (req, res) => {
