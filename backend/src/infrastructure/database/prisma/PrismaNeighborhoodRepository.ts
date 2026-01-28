@@ -7,6 +7,7 @@ import { GeoLocation } from "../../../domain/value-objects/GeoLocation.js";
 import { EntityNotFoundError } from "../../../domain/errors/persistence/EntityNotFoundError.js";
 import { ConflictError } from "../../../domain/errors/persistence/ConflictError.js";
 import { PersistenceError } from "../../../domain/errors/persistence/PersistenceError.js";
+import { DependencyError } from "../../../domain/errors/persistence/DependencyError.js";
 
 export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
     constructor(private prisma: PrismaClient) { }
@@ -170,6 +171,9 @@ export class PrismaNeighborhoodRepository implements NeighborhoodRepository {
         } catch (error: any) {
             if (error.code === 'P2025') {
                 throw new EntityNotFoundError("Bairro", id);
+            }
+            if (error.code === 'P2003') {
+                throw new DependencyError("Não é possível excluir este bairro pois existem ecopontos ou inscritos vinculados a ele.");
             }
             throw new PersistenceError(`Erro ao deletar bairro: ${error.message}`);
         }

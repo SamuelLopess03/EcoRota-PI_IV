@@ -26,6 +26,7 @@ export interface RouteRepository {
   
   /**
    * @throws {EntityNotFoundError} Se a rota não existir para deleção.
+   * @throws {DependencyError} Se a rota tiver bairros vinculados.
    * @throws {PersistenceError} Se ocorrer uma falha técnica na persistência.
    */
   delete(id: number): Promise<void>;

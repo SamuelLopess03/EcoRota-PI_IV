@@ -7,6 +7,7 @@ import { CollectionType } from "../../../domain/value-objects/CollectionType.js"
 import { EntityNotFoundError } from "../../../domain/errors/persistence/EntityNotFoundError.js";
 import { ConflictError } from "../../../domain/errors/persistence/ConflictError.js";
 import { PersistenceError } from "../../../domain/errors/persistence/PersistenceError.js";
+import { DependencyError } from "../../../domain/errors/persistence/DependencyError.js";
 
 export class PrismaRouteRepository implements RouteRepository {
   constructor(private prisma: PrismaClient) { }
@@ -141,6 +142,9 @@ export class PrismaRouteRepository implements RouteRepository {
     } catch (error: any) {
       if (error.code === 'P2025') {
         throw new EntityNotFoundError("Rota", id);
+      }
+      if (error.code === 'P2003') {
+        throw new DependencyError("Não é possível excluir esta rota pois existem bairros vinculados a ela.");
       }
       throw new PersistenceError(`Erro ao deletar rota: ${error.message}`);
     }

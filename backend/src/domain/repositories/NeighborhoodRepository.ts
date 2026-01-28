@@ -32,6 +32,7 @@ export interface NeighborhoodRepository {
     
     /**
      * @throws {EntityNotFoundError} Se o bairro não existir para deleção.
+     * @throws {DependencyError} Se o bairro tiver ecopontos ou assinantes vinculados.
      * @throws {PersistenceError} Se ocorrer uma falha técnica na persistência.
      */
     delete(id: number): Promise<void>;

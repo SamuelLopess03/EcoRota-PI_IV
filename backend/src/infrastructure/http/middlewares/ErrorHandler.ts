@@ -3,6 +3,7 @@ import { ProviderError } from "../../../domain/errors/providers/ProviderError.js
 import { PersistenceError } from "../../../domain/errors/persistence/PersistenceError.js";
 import { EntityNotFoundError } from "../../../domain/errors/persistence/EntityNotFoundError.js";
 import { ConflictError } from "../../../domain/errors/persistence/ConflictError.js";
+import { DependencyError } from "../../../domain/errors/persistence/DependencyError.js";
 import { InvalidEmailError } from "../../../domain/errors/InvalidEmailError.js";
 import { InvalidAddressError } from "../../../domain/errors/InvalidAddressError.js";
 import { InvalidTokenError } from "../../../domain/errors/providers/InvalidTokenError.js";
@@ -18,6 +19,11 @@ export const ErrorHandler = (
     res: Response,
     next: NextFunction
 ) => {
+    // Erros de Autenticação (401 Unauthorized)
+    if (error instanceof InvalidTokenError || error instanceof InvalidCredentialsError) {
+        return res.status(401).json({ error: error.message });
+    }
+
     // Erros de Validação de Domínio (400 Bad Request)
     if (
         error instanceof InvalidEmailError ||
@@ -27,18 +33,13 @@ export const ErrorHandler = (
         return res.status(400).json({ error: error.message });
     }
 
-    // Erros de Autenticação (401 Unauthorized)
-    if (error instanceof InvalidTokenError || error instanceof InvalidCredentialsError) {
-        return res.status(401).json({ error: error.message });
-    }
-
     // Erros de Entidade Não Encontrada (404 Not Found)
     if (error instanceof EntityNotFoundError) {
         return res.status(404).json({ error: error.message });
     }
 
-    // Erros de Conflito (409 Conflict)
-    if (error instanceof ConflictError) {
+    // Erros de Conflito ou Dependência (409 Conflict)
+    if (error instanceof ConflictError || error instanceof DependencyError) {
         return res.status(409).json({ error: error.message });
     }
 
