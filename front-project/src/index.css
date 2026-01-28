@@ -5,3 +5,70 @@ body {
     background-color: #f4f7f6;
     color: #333;
 }
+
+/* Custom Navbar Styles */
+.navbar-nav .dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    padding: 0.5rem;
+    margin-top: 0 !important;
+    background-color: #212529 !important;
+    min-width: 220px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Center alignment */
+    left: 50% !important;
+    right: auto !important;
+}
+
+/* Hover behavior for desktop */
+@media (min-width: 992px) {
+    .nav-item.dropdown:hover .dropdown-menu:not(.closing) {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(8px);
+    }
+    .nav-item.dropdown .dropdown-menu {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-50%) translateY(20px);
+    }
+}
+
+/* Force hide when an item is clicked (will be added via JS) */
+.dropdown-menu.closing {
+    display: none !important;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85) !important; /* Light text for readability */
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #2e7d32 !important; /* Green background on hover */
+    color: #ffffff !important;
+    transform: translateX(5px);
+}
+
+.dropdown-item:active {
+    background-color: #c8e6c9;
+    color: #1b5e20;
+}
+
+/* Fix for smooth scroll offset with sticky navbar */
+section {
+    scroll-margin-top: 100px;
+}
+
+#mapa, #buscar-bairro, #relatar-problema, #parceiros, #como-contribuir {
+    scroll-margin-top: 100px;
+}

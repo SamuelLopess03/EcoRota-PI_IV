@@ -23,7 +23,7 @@ const Ecopontos = () => {
             </section>
 
             {/* GRID DE PARCEIROS */}
-            <div className="row g-4 mb-5">
+            <div id="parceiros" className="row g-4 mb-5">
                 {parceiros.map((p, index) => (
                     <PartnerCard key={index} nome={p.nome} qtd={p.qtd} />
                 ))}

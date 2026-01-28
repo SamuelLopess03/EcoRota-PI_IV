@@ -4,7 +4,7 @@ import qrcode from '../../images/QRCODE.png';
 
 const BecomePartner: React.FC = () => {
     return (
-        <section className="bg-dark text-white rounded-4 p-5 shadow">
+        <section id="como-contribuir" className="bg-dark text-white rounded-4 p-5 shadow">
             <div className="row align-items-center">
                 <div className="col-lg-7">
                     <h2 className="fw-bold d-flex align-items-center gap-3">
