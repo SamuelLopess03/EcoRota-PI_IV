@@ -1,14 +1,13 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from 'url';
 
 import { administratorRoutes } from "./presentation/routes/administratorRoutes.js";
 import { subscriberRoutes } from "./presentation/routes/subscriberRoutes.js";
 import { problemReportRoutes } from "./presentation/routes/problemReportRoutes.js";
 import { uploadRoutes } from "./presentation/routes/uploadRoutes.js";
 import { routeRoutes } from "./presentation/routes/routeRoutes.js";
-import path from "path";
-import { fileURLToPath } from 'url';
-
 import { neighborhoodRoutes } from "./presentation/routes/neighborhoodRoutes.js";
 import { ecopointRoutes } from "./presentation/routes/ecopointRoutes.js";
 
