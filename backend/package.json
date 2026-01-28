@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "description": "Backend em Node.js e Express com TypeScript para gerenciamento inteligente de coleta de lixo, incluindo rotas, ecopontos e problemas reportados pela comunidade.",
   "main": "dist/src/server.js",
-  "scripts": {
-    "dev": "tsx --watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/src/server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js -c jest.config.ts"
-  },
+ "scripts": {
+  "dev": "tsx --watch src/server.ts",
+  "build": "tsc",
+  "start": "node dist/src/server.js",
+
+  "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js -c jest.config.ts",
+  "test:unit": "npm run test -- tests/unit",
+  "test:integration": "npm run test -- tests/integration",
+
+  "test:watch": "npm run test -- --watch",
+  "test:one": "npm run test --"
+},
   "keywords": [
     "nodejs",
     "express",
