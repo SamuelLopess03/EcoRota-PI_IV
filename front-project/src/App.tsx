@@ -26,6 +26,12 @@ function ScrollToHash() {
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/admin/Dashboard';
+import NeighborhoodsList from './pages/admin/NeighborhoodsList';
+import NeighborhoodForm from './pages/admin/NeighborhoodForm';
+import SubscribersList from './pages/admin/SubscribersList';
+import SubscriberForm from './pages/admin/SubscriberForm';
+import AdminsList from './pages/admin/AdminsList';
+import AdminForm from './pages/admin/AdminForm';
 
 function App() {
   return (
@@ -46,11 +52,39 @@ function App() {
               {/* Protected Admin Routes */}
               <Route
                 path="/admin/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
+                element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/neighborhoods"
+                element={<ProtectedRoute><NeighborhoodsList /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/neighborhoods/new"
+                element={<ProtectedRoute><NeighborhoodForm /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/neighborhoods/:id/edit"
+                element={<ProtectedRoute><NeighborhoodForm /></ProtectedRoute>}
+              />
+              
+              {/* Subscribers */}
+              <Route
+                path="/admin/subscribers"
+                element={<ProtectedRoute><SubscribersList /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/subscribers/new"
+                element={<ProtectedRoute><SubscriberForm /></ProtectedRoute>}
+              />
+
+              {/* Admins */}
+              <Route
+                path="/admin/users"
+                element={<ProtectedRoute><AdminsList /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/users/new"
+                element={<ProtectedRoute><AdminForm /></ProtectedRoute>}
               />
             </Routes>
           </div>

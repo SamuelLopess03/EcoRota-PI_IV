@@ -3,14 +3,14 @@ import type { ReactNode } from 'react';
 import { authService } from '../services/authService';
 import type { LoginRequest } from '../services/authService';
 
-interface User {
+interface Administrator {
   id: string;
   email: string;
   name: string;
 }
 
 interface AuthContextData {
-  user: User | null;
+  administrator: Administrator | null;
   signed: boolean;
   loading: boolean;
   signIn(credentials: LoginRequest): Promise<void>;
@@ -20,16 +20,16 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [administrator, setAdministrator] = useState<Administrator | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadStorageData() {
-      const storageUser = localStorage.getItem('@EcoRota:user');
+      const storageAdministrator = localStorage.getItem('@EcoRota:administrator');
       const storageToken = localStorage.getItem('@EcoRota:token');
 
-      if (storageUser && storageToken) {
-        setUser(JSON.parse(storageUser));
+      if (storageAdministrator && storageToken) {
+        setAdministrator(JSON.parse(storageAdministrator));
       }
       setLoading(false);
     }
@@ -39,16 +39,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   async function signIn(credentials: LoginRequest) {
     const response = await authService.login(credentials);
-    setUser(response.user);
+    setAdministrator(response.administrator);
   }
 
   function signOut() {
     authService.logout();
-    setUser(null);
+    setAdministrator(null);
   }
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ signed: !!administrator, administrator, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

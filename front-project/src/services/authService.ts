@@ -8,7 +8,7 @@ export interface LoginRequest {
 
 export interface AuthResponse {
   token: string;
-  user: {
+  administrator: {
     id: string;
     email: string;
     name: string;
@@ -21,7 +21,7 @@ export const authService = {
     
     if (response.data.token) {
       localStorage.setItem('@EcoRota:token', response.data.token);
-      localStorage.setItem('@EcoRota:user', JSON.stringify(response.data.user));
+      localStorage.setItem('@EcoRota:administrator', JSON.stringify(response.data.administrator));
     }
     
     return response.data;
@@ -29,6 +29,15 @@ export const authService = {
 
   async logout(): Promise<void> {
     localStorage.removeItem('@EcoRota:token');
-    localStorage.removeItem('@EcoRota:user');
+    localStorage.removeItem('@EcoRota:administrator');
+  },
+
+  async register(data: { name: string; email: string; password: string }): Promise<void> {
+    await api.post('/administrators', data);
+  },
+
+  async list(): Promise<AuthResponse['administrator'][]> {
+      const response = await api.get<AuthResponse['administrator'][]>('/administrators');
+      return response.data;
   }
 };

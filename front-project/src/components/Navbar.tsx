@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
+    const { signed } = useAuth();
+
     const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         const menu = e.currentTarget.closest('.dropdown-menu');
         if (menu) {
@@ -66,7 +69,11 @@ function Navbar() {
                                 Portal do Servidor
                             </Link>
                             <ul className="dropdown-menu shadow">
-                                <li><Link className="dropdown-item" to="/admin-login" onClick={handleItemClick}>Login Administrador</Link></li>
+                                {signed ? (
+                                    <li><Link className="dropdown-item" to="/admin/dashboard" onClick={handleItemClick}>Acessar Dashboard</Link></li>
+                                ) : (
+                                    <li><Link className="dropdown-item" to="/admin-login" onClick={handleItemClick}>Login Administrador</Link></li>
+                                )}
                             </ul>
                         </li>
 

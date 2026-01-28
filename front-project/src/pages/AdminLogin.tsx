@@ -18,6 +18,7 @@ const AdminLogin: React.FC = () => {
         
         try {
             await signIn({ email, password });
+
             navigate('/admin/dashboard');
         } catch (err) {
             console.error(err);

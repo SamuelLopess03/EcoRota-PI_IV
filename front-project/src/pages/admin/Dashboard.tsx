@@ -1,9 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FaUsers, FaMapMarkedAlt, FaExclamationTriangle, FaSignOutAlt } from 'react-icons/fa';
 
 const Dashboard: React.FC = () => {
-    const { user, signOut } = useAuth();
+    const { administrator, signOut } = useAuth();
 
     const modules = [
         { title: 'Bairros e Rotas', icon: <FaMapMarkedAlt />, count: '12 Bairros', color: 'bg-primary' },
@@ -15,7 +16,7 @@ const Dashboard: React.FC = () => {
         <div className="container py-5">
             <header className="d-flex justify-content-between align-items-center mb-5">
                 <div>
-                    <h1 className="fw-bold">Bem-vindo, {user?.name}</h1>
+                    <h1 className="fw-bold">Bem-vindo, {administrator?.name}</h1>
                     <p className="text-secondary text-uppercase small ls-wider">Painel de Administração do EcoRota</p>
                 </div>
                 <button className="btn btn-outline-danger d-flex align-items-center gap-2" onClick={signOut}>
@@ -42,9 +43,9 @@ const Dashboard: React.FC = () => {
             <div className="card border-0 shadow-sm rounded-4 p-4">
                 <h4 className="fw-bold mb-4">Ações Rápidas</h4>
                 <div className="d-flex gap-3">
-                    <button className="btn btn-dark py-2 px-4 rounded-pill">Novo Bairro</button>
-                    <button className="btn btn-dark py-2 px-4 rounded-pill">Ver Assinantes</button>
-                    <button className="btn btn-dark py-2 px-4 rounded-pill">Configurações</button>
+                    <Link to="/admin/neighborhoods/new" className="btn btn-dark py-2 px-4 rounded-pill">Novo Bairro</Link>
+                    <Link to="/admin/subscribers" className="btn btn-dark py-2 px-4 rounded-pill">Ver Assinantes</Link>
+                    <Link to="/admin/users/new" className="btn btn-dark py-2 px-4 rounded-pill">Novo Admin</Link>
                 </div>
             </div>
         </div>
