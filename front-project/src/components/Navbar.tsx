@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Navebar() {
+function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm" style={{ borderTop: '4px solid #4CAF50' }}>
             <div className="container">
@@ -24,7 +24,7 @@ function Navebar() {
 
                         {/* Item: Informações */}
                         <li className="nav-item dropdown">
-                            <Link className="nav-link dropdown-toggle text-white fw-bold" to="/informacoes" id="homeDrop">
+                            <Link className="nav-link dropdown-toggle text-white fw-bold" to="/informacoes" id="infoDrop">
                                 Informações
                             </Link>
                             <ul className="dropdown-menu">
@@ -36,7 +36,7 @@ function Navebar() {
 
                         {/* Item: Ecopontos */}
                         <li className="nav-item dropdown">
-                            <Link className="nav-link dropdown-toggle text-white fw-bold" to="/ecopontos" id="homeDrop">
+                            <Link className="nav-link dropdown-toggle text-white fw-bold" to="/ecopontos" id="ecopontosDrop">
                                 Ecopontos
                             </Link>
                             <ul className="dropdown-menu">
@@ -48,7 +48,7 @@ function Navebar() {
 
                         {/* Item: Portal do Servidor */}
                         <li className="nav-item dropdown">
-                            <Link className="nav-link dropdown-toggle text-white fw-bold" to="/" id="homeDrop">
+                            <Link className="nav-link dropdown-toggle text-white fw-bold" to="/" id="adminDrop">
                                 Portal do Servidor
                             </Link>
                             <ul className="dropdown-menu">
@@ -62,4 +62,4 @@ function Navebar() {
         </nav>
     );
 }
-export default Navebar;
+export default Navbar;
