@@ -8,6 +8,7 @@ import Navebar from './components/Navebar'
 import Home from './pages/Home';
 import Info from './pages/Info';
 import Ecoponto from './pages/Ecopontos';
+import AdminLogin from './pages/AdminLogin';
 
 function App() {
 
@@ -24,7 +25,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/informacoes" element={< Info/>} />
             <Route path="/ecopontos" element={<Ecoponto/>} />
-            
+            <Route path="/admin-login" element={<AdminLogin />} />
           </Routes>
         </div>
         <Footer />
