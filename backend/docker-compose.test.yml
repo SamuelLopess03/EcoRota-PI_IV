@@ -1,0 +1,15 @@
+services:
+  db_test:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: ecorota_test
+      MARIADB_USER: ecorota
+      MARIADB_PASSWORD: ecorota
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
