@@ -19,6 +19,10 @@ app.use(express.json());
 import { administratorRoutes } from "./presentation/routes/administratorRoutes.js";
 app.use(administratorRoutes);
 
+// Rotas de Bairros (Neighborhoods)
+import { neighborhoodRoutes } from "./presentation/routes/neighborhoodRoutes.js";
+app.use(neighborhoodRoutes);
+
 // Rota de Health Check
 app.get("/ping", (req, res) => {
     res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
