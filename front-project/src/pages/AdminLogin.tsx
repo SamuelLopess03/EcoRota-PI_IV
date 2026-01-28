@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { FaLock, FaEnvelope } from 'react-icons/fa';
+import { FaLock, FaEnvelope, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const AdminLogin: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,12 +26,13 @@ const AdminLogin: React.FC = () => {
 
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                            <label className="form-label small fw-bold text-secondary text-uppercase">E-mail Corporativo</label>
+                            <label htmlFor="email" className="form-label small fw-bold text-secondary text-uppercase">E-mail Corporativo</label>
                             <div className="input-group">
                                 <span className="input-group-text bg-light border-end-0">
                                     <FaEnvelope className="text-muted" />
                                 </span>
                                 <input 
+                                    id="email"
                                     type="email" 
                                     className="form-control border-start-0" 
                                     placeholder="admin@exemplo.com"
@@ -42,19 +44,29 @@ const AdminLogin: React.FC = () => {
                         </div>
 
                         <div className="mb-4">
-                            <label className="form-label small fw-bold text-secondary text-uppercase">Senha</label>
+                            <label htmlFor="password" className="form-label small fw-bold text-secondary text-uppercase">Senha</label>
                             <div className="input-group">
                                 <span className="input-group-text bg-light border-end-0">
                                     <FaLock className="text-muted" />
                                 </span>
                                 <input 
-                                    type="password" 
-                                    className="form-control border-start-0" 
+                                    id="password"
+                                    type={showPassword ? "text" : "password"} 
+                                    className="form-control border-start-0 border-end-0" 
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
+                                <button 
+                                    type="button"
+                                    className="input-group-text bg-white border-start-0 text-muted"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{ cursor: 'pointer' }}
+                                    aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </button>
                             </div>
                         </div>
 
