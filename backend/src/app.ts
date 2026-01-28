@@ -22,6 +22,10 @@ app.use(administratorRoutes);
 // Rotas de Assinantes (Subscribers)
 import { subscriberRoutes } from "./presentation/routes/subscriberRoutes.js";
 app.use(subscriberRoutes);
+
+// Rotas de Coleta (Routes)
+import { routeRoutes } from "./presentation/routes/routeRoutes.js";
+app.use(routeRoutes);
 // Rotas de Bairros (Neighborhoods)
 import { neighborhoodRoutes } from "./presentation/routes/neighborhoodRoutes.js";
 app.use(neighborhoodRoutes);
