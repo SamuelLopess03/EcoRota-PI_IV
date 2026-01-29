@@ -44,7 +44,8 @@ export class ListReportedProblemsUseCase {
       createdAt: report.createdAt,
       updatedAt: report.updatedAt,
       subscriberId: report.subscriberId,
-      resolvedByAdminId: report.resolvedByAdminId
+      resolvedByAdminId: report.resolvedByAdminId,
+      justification: report.justification ? report.justification.getValue() : null
     }));
   }
 }

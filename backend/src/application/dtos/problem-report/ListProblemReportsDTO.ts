@@ -9,4 +9,5 @@ export interface ListProblemReportsOutputDTO {
   updatedAt: Date;
   subscriberId: number;
   resolvedByAdminId: number | null;
+  justification: string | null;
 }

@@ -2,6 +2,7 @@ import { ProblemReportRepository } from "../../../domain/repositories/ProblemRep
 import { AdministratorRepository } from "../../../domain/repositories/AdministratorRepository.js";
 import { ResolveProblemInputDTO, ResolveProblemOutputDTO } from "../../dtos/problem-report/ResolveProblemDTO.js";
 import { ProblemStatus } from "../../../domain/value-objects/ProblemStatus.js";
+import { ProblemJustification } from "../../../domain/value-objects/ProblemJustification.js";
 
 /**
  * @class ResolveProblemUseCase
@@ -19,14 +20,16 @@ export class ResolveProblemUseCase {
    * @param input Dados da resolução.
    * @throws {EntityNotFoundError} Se o relato ou admin não existirem.
    * @throws {InvalidProblemStatusError} Se o status for inválido.
+   * @throws {InvalidProblemJustificationError} Se a justificativa for inválida.
    * @throws {PersistenceError} Se ocorrer uma falha na persistência.
    */
   async execute(id: number, input: ResolveProblemInputDTO): Promise<ResolveProblemOutputDTO> {
     await this.administratorRepository.findById(input.adminId);
 
     const newStatus = new ProblemStatus(input.status);
+    const justification = input.justification ? new ProblemJustification(input.justification) : undefined;
     
-    const updatedReport = await this.problemReportRepository.updateStatus(id, newStatus, input.adminId);
+    const updatedReport = await this.problemReportRepository.updateStatus(id, newStatus, input.adminId, justification);
 
     return {
       id: updatedReport.id,
@@ -38,7 +41,8 @@ export class ResolveProblemUseCase {
       createdAt: updatedReport.createdAt,
       updatedAt: updatedReport.updatedAt,
       subscriberId: updatedReport.subscriberId,
-      resolvedByAdminId: updatedReport.resolvedByAdminId
+      resolvedByAdminId: updatedReport.resolvedByAdminId,
+      justification: updatedReport.justification ? updatedReport.justification.getValue() : null
     };
   }
 }

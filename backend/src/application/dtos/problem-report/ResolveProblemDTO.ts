@@ -1,6 +1,7 @@
 export interface ResolveProblemInputDTO {
   status: string;
   adminId: number;
+  justification?: string;
 }
 
 export interface ResolveProblemOutputDTO {
@@ -14,4 +15,5 @@ export interface ResolveProblemOutputDTO {
   updatedAt: Date;
   subscriberId: number;
   resolvedByAdminId: number | null;
+  justification: string | null;
 }

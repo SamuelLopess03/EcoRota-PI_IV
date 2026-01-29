@@ -3,6 +3,7 @@ export interface UpdateProblemReportInputDTO {
   problemType?: string;
   attachments?: string[];
   subscriberId?: number;
+  justification?: string;
 }
 
 export interface UpdateProblemReportOutputDTO {
@@ -16,4 +17,5 @@ export interface UpdateProblemReportOutputDTO {
   updatedAt: Date;
   subscriberId: number;
   resolvedByAdminId: number | null;
+  justification: string | null;
 }
