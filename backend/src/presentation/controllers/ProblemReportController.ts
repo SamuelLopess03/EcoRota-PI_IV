@@ -16,6 +16,7 @@ const reportProblemSchema = z.object({
 
 const resolveProblemSchema = z.object({
     status: z.string().min(3).max(20),
+    justification: z.string().min(10).max(500).optional(),
 });
 
 const updateProblemReportSchema = z.object({
@@ -79,7 +80,8 @@ export class ProblemReportController {
 
         const output = await this.resolveProblemUseCase.execute(id, {
             status: body.status,
-            adminId
+            justification: body.justification,
+            adminId,
         });
 
         return res.status(200).json(output);
