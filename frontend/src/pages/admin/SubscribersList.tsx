@@ -71,8 +71,13 @@ const SubscribersList: React.FC = () => {
         <div className="container py-5">
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
                 <div className="d-flex align-items-center gap-3">
-                    <Link to="/admin/dashboard" className="btn btn-outline-success btn-circle-sm rounded-circle d-flex align-items-center justify-content-center" title="Voltar ao Dashboard">
-                        <FaArrowLeft />
+                    <Link 
+                        to="/admin/dashboard" 
+                        className="btn btn-outline-success rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm" 
+                        title="Voltar ao Dashboard"
+                        style={{ width: '38px', height: '38px' }}
+                    >
+                        <FaArrowLeft size={16} />
                     </Link>
                     <h2 className="fw-bold mb-0">Gestão de Assinantes</h2>
                 </div>

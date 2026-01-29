@@ -16,15 +16,16 @@ const EcopointForm: React.FC = () => {
         name: '',
         partnerName: '',
         materials: [] as string[],
-        latitude: 0,
-        longitude: 0,
+        latitude: '',
+        longitude: '',
         collectionDays: [] as string[],
         startTime: '',
         endTime: '',
-        neighborhoodId: 0
+        neighborhoodId: ''
     });
 
     const [loading, setLoading] = useState(false);
+    const [fetchingNeighborhoods, setFetchingNeighborhoods] = useState(true);
 
     const materialMap: { [key: string]: string } = {
         'glass': 'Vidro',
@@ -63,6 +64,8 @@ const EcopointForm: React.FC = () => {
             setNeighborhoods(data);
         } catch (error) {
             console.error('Erro ao carregar bairros:', error);
+        } finally {
+            setFetchingNeighborhoods(false);
         }
     }
 
@@ -73,12 +76,12 @@ const EcopointForm: React.FC = () => {
                 name: data.name,
                 partnerName: data.partnerName || '',
                 materials: data.materials,
-                latitude: data.latitude,
-                longitude: data.longitude,
+                latitude: data.latitude.toString(),
+                longitude: data.longitude.toString(),
                 collectionDays: data.collectionDays,
                 startTime: data.startTime,
                 endTime: data.endTime,
-                neighborhoodId: data.neighborhoodId
+                neighborhoodId: data.neighborhoodId.toString()
             });
         } catch (error) {
             console.error('Erro ao carregar ecoponto:', error);
@@ -94,12 +97,12 @@ const EcopointForm: React.FC = () => {
             name: form.name,
             partnerName: form.partnerName || undefined,
             materials: form.materials,
-            latitude: form.latitude,
-            longitude: form.longitude,
+            latitude: Number(form.latitude),
+            longitude: Number(form.longitude),
             collectionDays: form.collectionDays,
             startTime: form.startTime,
             endTime: form.endTime,
-            neighborhoodId: form.neighborhoodId
+            neighborhoodId: Number(form.neighborhoodId)
         };
 
         try {
@@ -111,9 +114,10 @@ const EcopointForm: React.FC = () => {
                 toast.success('Ecoponto criado com sucesso!');
             }
             navigate('/admin/ecopoints');
-        } catch (error) {
+        } catch (error: any) {
             console.error('Erro ao salvar:', error);
-            toast.error('Erro ao salvar ecoponto. Verifique os dados.');
+            const message = error.response?.data?.error || 'Erro ao salvar ecoponto. Verifique os dados.';
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -140,8 +144,12 @@ const EcopointForm: React.FC = () => {
             <div className="row justify-content-center">
                 <div className="col-lg-10">
                     <div className="d-flex align-items-center gap-3 mb-4">
-                        <Link to="/admin/ecopoints" className="btn btn-outline-secondary rounded-circle p-2">
-                            <FaArrowLeft />
+                        <Link 
+                            to="/admin/ecopoints" 
+                            className="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm"
+                            style={{ width: '38px', height: '38px' }}
+                        >
+                            <FaArrowLeft size={16} />
                         </Link>
                         <h2 className="fw-bold mb-0">{isEditing ? 'Editar Ecoponto' : 'Novo Ecoponto'}</h2>
                     </div>
@@ -149,29 +157,30 @@ const EcopointForm: React.FC = () => {
                     <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
                         <div className="card-body p-5">
                             <form onSubmit={handleSubmit}>
-                                <h5 className="fw-bold mb-3">Informações Básicas</h5>
-                                
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label fw-bold">Nome do Ecoponto</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            required
-                                            placeholder="Ex: Ecoponto Centro"
-                                            value={form.name}
-                                            onChange={e => setForm({ ...form, name: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label fw-bold">Parceiro / Empresa (Opcional)</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Ex: Empresa de Reciclagem Silva"
-                                            value={form.partnerName}
-                                            onChange={e => setForm({ ...form, partnerName: e.target.value })}
-                                        />
+                                <div className="mb-4">
+                                    <h5 className="fw-bold border-bottom pb-2 mb-3">Informações Básicas</h5>
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold">Nome do Ecoponto</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                required
+                                                placeholder="Ex: Ecoponto Centro"
+                                                value={form.name}
+                                                onChange={e => setForm({ ...form, name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold">Parceiro / Empresa (Opcional)</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Ex: Empresa de Reciclagem Silva"
+                                                value={form.partnerName}
+                                                onChange={e => setForm({ ...form, partnerName: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -204,91 +213,96 @@ const EcopointForm: React.FC = () => {
                                         className="form-select"
                                         required
                                         value={form.neighborhoodId}
-                                        onChange={e => setForm({ ...form, neighborhoodId: Number(e.target.value) })}
+                                        onChange={e => setForm({ ...form, neighborhoodId: e.target.value })}
+                                        disabled={fetchingNeighborhoods}
                                     >
                                         <option value="">Selecione um bairro</option>
                                         {neighborhoods.map(n => (
                                             <option key={n.id} value={n.id}>{n.name}</option>
                                         ))}
                                     </select>
+                                    {fetchingNeighborhoods && <div className="form-text text-muted small mt-1">Carregando bairros...</div>}
                                 </div>
 
-                                <hr className="my-4" />
-                                <h5 className="fw-bold mb-3">Localização</h5>
-
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label fw-bold">Latitude</label>
-                                        <input
-                                            type="number"
-                                            step="any"
-                                            className="form-control"
-                                            required
-                                            value={form.latitude}
-                                            onChange={e => setForm({ ...form, latitude: Number(e.target.value) })}
-                                        />
-                                    </div>
-                                    <div className="col-md-6 mb-4">
-                                        <label className="form-label fw-bold">Longitude</label>
-                                        <input
-                                            type="number"
-                                            step="any"
-                                            className="form-control"
-                                            required
-                                            value={form.longitude}
-                                            onChange={e => setForm({ ...form, longitude: Number(e.target.value) })}
-                                        />
-                                    </div>
-                                </div>
-
-                                <hr className="my-4" />
-                                <h5 className="fw-bold mb-3">Horário de Funcionamento</h5>
-
-                                <div className="mb-3">
-                                    <label className="form-label fw-bold">Dias de Funcionamento</label>
-                                    <div className="d-flex flex-wrap gap-2">
-                                        {daysOfWeek.map(dayKey => (
-                                            <div key={dayKey} className="form-check">
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    id={`eco-${dayKey}`}
-                                                    checked={form.collectionDays.includes(dayKey)}
-                                                    onChange={() => handleDayToggle(dayKey)}
-                                                />
-                                                <label className="form-check-label" htmlFor={`eco-${dayKey}`}>
-                                                    {daysMap[dayKey]}
-                                                </label>
-                                            </div>
-                                        ))}
+                                <div className="mb-4">
+                                    <h5 className="fw-bold border-bottom pb-2 mb-3">Localização</h5>
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold">Latitude</label>
+                                            <input
+                                                type="number"
+                                                step="any"
+                                                className="form-control"
+                                                required
+                                                value={form.latitude}
+                                                onChange={e => setForm({ ...form, latitude: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold">Longitude</label>
+                                            <input
+                                                type="number"
+                                                step="any"
+                                                className="form-control"
+                                                required
+                                                value={form.longitude}
+                                                onChange={e => setForm({ ...form, longitude: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label className="form-label fw-bold">Horário de Abertura</label>
-                                        <input
-                                            type="time"
-                                            className="form-control"
-                                            required
-                                            value={form.startTime}
-                                            onChange={e => setForm({ ...form, startTime: e.target.value })}
-                                        />
+                                <div className="mb-4">
+                                    <h5 className="fw-bold border-bottom pb-2 mb-3">Horário de Funcionamento</h5>
+                                    <div className="mb-3">
+                                        <label className="form-label fw-bold">Dias de Atendimento</label>
+                                        <div className="d-flex flex-wrap gap-2 p-3 bg-light rounded-3">
+                                            {daysOfWeek.map(dayKey => (
+                                                <div key={dayKey} className="form-check">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        id={`eco-${dayKey}`}
+                                                        checked={form.collectionDays.includes(dayKey)}
+                                                        onChange={() => handleDayToggle(dayKey)}
+                                                    />
+                                                    <label className="form-check-label" htmlFor={`eco-${dayKey}`}>
+                                                        {daysMap[dayKey]}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {form.collectionDays.length === 0 && (
+                                            <div className="form-text text-danger mt-1">Selecione pelo menos um dia de funcionamento.</div>
+                                        )}
                                     </div>
-                                    <div className="col-md-6 mb-4">
-                                        <label className="form-label fw-bold">Horário de Fechamento</label>
-                                        <input
-                                            type="time"
-                                            className="form-control"
-                                            required
-                                            value={form.endTime}
-                                            onChange={e => setForm({ ...form, endTime: e.target.value })}
-                                        />
+
+                                    <div className="row g-3">
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold">Horário de Abertura</label>
+                                            <input
+                                                type="time"
+                                                className="form-control"
+                                                required
+                                                value={form.startTime}
+                                                onChange={e => setForm({ ...form, startTime: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="form-label fw-bold">Horário de Fechamento</label>
+                                            <input
+                                                type="time"
+                                                className="form-control"
+                                                required
+                                                value={form.endTime}
+                                                onChange={e => setForm({ ...form, endTime: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="d-grid">
-                                    <button type="submit" className="btn btn-success py-3 fw-bold rounded-3" disabled={loading}>
+                                <div className="d-grid mt-5">
+                                    <button type="submit" className="btn btn-success py-3 fw-bold rounded-3 shadow-sm hover-grow" disabled={loading}>
                                         <FaSave className="me-2" />
                                         {loading ? 'Salvando...' : (isEditing ? 'Atualizar Ecoponto' : 'Criar Ecoponto')}
                                     </button>

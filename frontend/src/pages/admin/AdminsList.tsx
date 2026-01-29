@@ -42,8 +42,13 @@ const AdminsList: React.FC = () => {
         <div className="container py-5">
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
                 <div className="d-flex align-items-center gap-3">
-                    <Link to="/admin/dashboard" className="btn btn-outline-success btn-circle-sm rounded-circle d-flex align-items-center justify-content-center" title="Voltar ao Dashboard">
-                        <FaArrowLeft />
+                    <Link 
+                        to="/admin/dashboard" 
+                        className="btn btn-outline-success rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm" 
+                        title="Voltar ao Dashboard"
+                        style={{ width: '38px', height: '38px' }}
+                    >
+                        <FaArrowLeft size={16} />
                     </Link>
                     <h2 className="fw-bold mb-0">Administradores do Sistema</h2>
                 </div>
@@ -53,7 +58,6 @@ const AdminsList: React.FC = () => {
             </div>
 
             <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
-                {/* Search and filters section */}
                 <div className="p-4 bg-light border-bottom">
                     <div className="input-group mw-400">
                         <span className="input-group-text bg-white border-end-0"><FaSearch className="text-muted" /></span>

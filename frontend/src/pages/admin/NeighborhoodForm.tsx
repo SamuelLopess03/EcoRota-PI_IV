@@ -106,8 +106,12 @@ const NeighborhoodForm: React.FC = () => {
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <div className="d-flex align-items-center gap-3 mb-4">
-                        <Link to="/admin/neighborhoods" className="btn btn-outline-secondary rounded-circle p-2">
-                            <FaArrowLeft />
+                        <Link 
+                            to="/admin/neighborhoods" 
+                            className="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm"
+                            style={{ width: '38px', height: '38px' }}
+                        >
+                            <FaArrowLeft size={16} />
                         </Link>
                         <h2 className="fw-bold mb-0">{isEditing ? 'Editar Bairro' : 'Novo Bairro'}</h2>
                     </div>

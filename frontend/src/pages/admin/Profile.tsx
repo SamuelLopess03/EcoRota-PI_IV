@@ -3,12 +3,12 @@ import { useAuth } from '../../context/AuthContext';
 import { adminService } from '../../services/adminService';
 import { toast } from 'react-hot-toast';
 import { FaUser, FaEnvelope, FaLock, FaTrash, FaSave, FaArrowLeft } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ConfirmModal from '../../components/common/ConfirmModal';
 
 const Profile: React.FC = () => {
     const { administrator, updateAdministrator, signOut } = useAuth();
-    const navigate = useNavigate();
+    
 
     const [name, setName] = useState(administrator?.name || '');
     const [email, setEmail] = useState(administrator?.email || '');
@@ -71,12 +71,16 @@ const Profile: React.FC = () => {
         <div className="container py-5">
             <div className="row justify-content-center">
                 <div className="col-md-8 col-lg-6">
-                    <button 
-                        onClick={() => navigate('/admin/dashboard')}
-                        className="btn btn-link text-decoration-none text-secondary mb-4 p-0 d-flex align-items-center gap-2"
-                    >
-                        <FaArrowLeft /> Voltar ao Dashboard
-                    </button>
+                    <div className="d-flex align-items-center gap-3 mb-4">
+                        <Link 
+                            to="/admin/dashboard" 
+                            className="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm"
+                            style={{ width: '38px', height: '38px' }}
+                        >
+                            <FaArrowLeft size={16} />
+                        </Link>
+                        <h2 className="mb-0 fs-4 fw-bold text-secondary">Voltar ao Dashboard</h2>
+                    </div>
 
                     <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
                         <div className="bg-primary text-white p-4 text-center">

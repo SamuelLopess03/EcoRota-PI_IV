@@ -49,7 +49,6 @@ const ReportsList: React.FC = () => {
     }
 
     async function handleStatusChange(id: number, newStatus: ProblemReport['status']) {
-        // Require justification for RESOLVED or REJECTED status
         if (newStatus === 'RESOLVED' || newStatus === 'REJECTED') {
             setJustificationModal({
                 isOpen: true,
@@ -59,7 +58,6 @@ const ReportsList: React.FC = () => {
             return;
         }
 
-        // For other statuses, update immediately
         await updateStatus(id, newStatus);
     }
 
@@ -118,8 +116,13 @@ const ReportsList: React.FC = () => {
     return (
         <div className="container py-5">
             <div className="d-flex align-items-center gap-3 mb-4">
-                <Link to="/admin/dashboard" className="btn btn-outline-success btn-circle-sm rounded-circle d-flex align-items-center justify-content-center" title="Voltar ao Dashboard">
-                    <FaArrowLeft />
+                <Link 
+                    to="/admin/dashboard" 
+                    className="btn btn-outline-success rounded-circle d-flex align-items-center justify-content-center p-0 shadow-sm" 
+                    title="Voltar ao Dashboard"
+                    style={{ width: '38px', height: '38px' }}
+                >
+                    <FaArrowLeft size={16} />
                 </Link>
                 <h2 className="fw-bold mb-0">Problemas Reportados</h2>
             </div>
