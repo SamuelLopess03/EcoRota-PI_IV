@@ -38,7 +38,7 @@ const authMiddleware = ensureAuthenticated(tokenProvider, administratorRepositor
 
 // Mapeamento de Rotas
 problemReportRoutes.post("/problem-reports", (req, res) => problemReportController.report(req, res));
-problemReportRoutes.get("/problem-reports", authMiddleware, (req, res) => problemReportController.list(req, res));
+problemReportRoutes.get("/problem-reports", (req, res) => problemReportController.list(req, res));
 problemReportRoutes.patch("/problem-reports/:id/resolve", authMiddleware, (req, res) => problemReportController.resolve(req, res));
 problemReportRoutes.put("/problem-reports/:id", authMiddleware, (req, res) => problemReportController.update(req, res));
 problemReportRoutes.delete("/problem-reports/:id", authMiddleware, (req, res) => problemReportController.delete(req, res));
