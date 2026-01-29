@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaTimes, FaCalendarAlt, FaMapMarkerAlt, FaFileAlt, FaExclamationCircle } from 'react-icons/fa';
+import { FaTimes, FaCalendarAlt, FaMapMarkerAlt, FaFileAlt, FaExclamationCircle, FaEnvelope } from 'react-icons/fa';
 import type { ProblemReport } from '../../services/reportService';
 
 interface ReportDetailsModalProps {
@@ -17,7 +17,6 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({ isOpen, report,
         <div className="modal-entrance-wrapper">
             <div className="modal-dialog modal-lg w-100 mw-800">
                 <div className="modal-content modal-entrance-content br-24 overflow-hidden border-0 shadow-lg">
-                    {/* Header */}
                     <div className="bg-success text-white p-4 text-center position-relative btn-green-gradient">
                         <button 
                             onClick={onClose}
@@ -34,7 +33,6 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({ isOpen, report,
 
                     <div className="p-4 bg-white overflow-auto" style={{ maxHeight: '70vh' }}>
                         <div className="row g-4">
-                            {/* General Info */}
                             <div className="col-md-6">
                                 <div className="mb-4">
                                     <label className="form-label small fw-bold text-muted text-uppercase letter-spacing-1">
@@ -54,7 +52,7 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({ isOpen, report,
                                 </div>
                                 <div className="mb-4">
                                     <label className="form-label small fw-bold text-muted text-uppercase letter-spacing-1">
-                                        <span className="me-2">📧</span> E-mail do Assinante
+                                        <FaEnvelope className="me-2" /> E-mail do Assinante
                                     </label>
                                     <div className="text-dark fw-medium">{subscriberEmail}</div>
                                 </div>
@@ -82,7 +80,6 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({ isOpen, report,
                                 </div>
                             </div>
 
-                            {/* Description */}
                             <div className="col-12">
                                 <div className="p-3 bg-light br-14 border">
                                     <label className="form-label small fw-bold text-muted text-uppercase letter-spacing-1 mb-2 d-block text-center border-bottom pb-2">
@@ -94,7 +91,6 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({ isOpen, report,
                                 </div>
                             </div>
 
-                            {/* Justification */}
                             {report.justification && (
                                 <div className="col-12">
                                     <div className="p-3 bg-warning-subtle br-14 border border-warning">
@@ -108,7 +104,6 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({ isOpen, report,
                                 </div>
                             )}
 
-                            {/* Evidence (Images) */}
                             {report.attachments && report.attachments.length > 0 && (
                                 <div className="col-12 mt-4">
                                     <label className="form-label small fw-bold text-muted text-uppercase letter-spacing-1 mb-3">

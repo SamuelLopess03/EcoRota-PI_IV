@@ -29,7 +29,9 @@ const ReportProblemModal: React.FC<ReportProblemModalProps> = ({ isOpen, onClose
         if (!files || files.length === 0) return;
 
         if (attachments.length + files.length > 3) {
-            toast.error('Gostaria de lembrar que o limite é de 3 imagens por relato.', { icon: '⚠️' });
+            toast.error('Gostaria de lembrar que o limite é de 3 imagens por relato.', { 
+                icon: <FaExclamationTriangle className="text-warning" /> 
+            });
             return;
         }
 

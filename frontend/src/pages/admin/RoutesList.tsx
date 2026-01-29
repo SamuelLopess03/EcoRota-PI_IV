@@ -19,7 +19,7 @@ const RoutesList: React.FC = () => {
     async function loadRoutes() {
         try {
             const data = await routeService.list();
-            setRoutes(data);
+            setRoutes(data || []);
         } catch (error) {
             console.error('Erro ao carregar rotas:', error);
             toast.error('Não foi possível carregar a lista de rotas.');

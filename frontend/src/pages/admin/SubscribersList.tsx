@@ -26,8 +26,8 @@ const SubscribersList: React.FC = () => {
                 subscriberService.list(),
                 neighborhoodService.list()
             ]);
-            setSubscribers(subsData);
-            setNeighborhoods(neighborhoodsData);
+            setSubscribers(subsData || []);
+            setNeighborhoods(neighborhoodsData || []);
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
             toast.error('Não foi possível carregar a lista de assinantes.');

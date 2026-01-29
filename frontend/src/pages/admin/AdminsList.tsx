@@ -22,7 +22,7 @@ const AdminsList: React.FC = () => {
     async function loadAdmins() {
         try {
             const data = await authService.list();
-            setAdmins(data as unknown as AdminUser[]);
+            setAdmins((data as unknown as AdminUser[]) || []);
         } catch (error) {
             console.error('Erro ao carregar administradores:', error);
             toast.error('Não foi possível carregar a lista de administradores.');

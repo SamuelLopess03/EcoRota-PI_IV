@@ -37,9 +37,9 @@ const ReportsList: React.FC = () => {
                 neighborhoodService.list(),
                 subscriberService.list()
             ]);
-            setReports(reportsData);
-            setNeighborhoods(neighborhoodsData);
-            setSubscribers(subscribersData);
+            setReports(reportsData || []);
+            setNeighborhoods(neighborhoodsData || []);
+            setSubscribers(subscribersData || []);
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
             toast.error('Não foi possível carregar a lista de relatos.');

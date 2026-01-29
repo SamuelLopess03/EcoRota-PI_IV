@@ -24,8 +24,8 @@ const NeighborhoodsList: React.FC = () => {
                 neighborhoodService.list(),
                 routeService.list()
             ]);
-            setNeighborhoods(neighborhoodsData);
-            setRoutes(routesData);
+            setNeighborhoods(neighborhoodsData || []);
+            setRoutes(routesData || []);
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
             toast.error('Não foi possível carregar os dados.');

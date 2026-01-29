@@ -36,8 +36,8 @@ const EcopointsList: React.FC = () => {
                 ecopointService.list(),
                 neighborhoodService.list()
             ]);
-            setEcopoints(ecopointsData);
-            setNeighborhoods(neighborhoodsData);
+            setEcopoints(ecopointsData || []);
+            setNeighborhoods(neighborhoodsData || []);
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
             toast.error('Não foi possível carregar a lista de ecopontos.');
