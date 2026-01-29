@@ -1,13 +1,14 @@
 import { ProblemReport } from "../entities/ProblemReport.js";
 import { ProblemStatus } from "../value-objects/ProblemStatus.js";
 import { ProblemProtocol } from "../value-objects/ProblemProtocol.js";
+import { ProblemJustification } from "../value-objects/ProblemJustification.js";
 
 export interface ProblemReportRepository {
   /**
    * @throws {ConflictError} Se houver conflito de protocolo.
    * @throws {PersistenceError} Se ocorrer uma falha técnica na persistência.
    */
-  create(data: Omit<ProblemReport, "id" | "createdAt" | "updatedAt">): Promise<ProblemReport>;
+  create(data: Omit<ProblemReport, "id" | "createdAt" | "updatedAt" | "justification">): Promise<ProblemReport>;
   
   /**
    * @throws {EntityNotFoundError} Se o relato não for encontrado pelo ID.
@@ -41,7 +42,7 @@ export interface ProblemReportRepository {
    * @throws {EntityNotFoundError} Se o relato não existir para atualização de status.
    * @throws {PersistenceError} Se ocorrer uma falha técnica na persistência.
    */
-  updateStatus(id: number, status: ProblemStatus, resolvedByAdminId?: number): Promise<ProblemReport>;
+  updateStatus(id: number, status: ProblemStatus, resolvedByAdminId?: number, justification?: ProblemJustification): Promise<ProblemReport>;
   
   /**
    * @throws {EntityNotFoundError} Se o relato não existir para deleção.

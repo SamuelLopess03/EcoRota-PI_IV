@@ -3,6 +3,7 @@ import { ProblemAttachments } from "../value-objects/ProblemAttachments.js";
 import { ProblemStatus } from "../value-objects/ProblemStatus.js";
 import { ProblemDescription } from "../value-objects/ProblemDescription.js";
 import { ProblemType } from "../value-objects/ProblemType.js";
+import { ProblemJustification } from "../value-objects/ProblemJustification.js";
 
 export class ProblemReport {
   constructor(
@@ -15,6 +16,7 @@ export class ProblemReport {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public subscriberId: number,
-    public resolvedByAdminId: number | null
+    public resolvedByAdminId: number | null,
+    public justification: ProblemJustification | null
   ) { }
 }
