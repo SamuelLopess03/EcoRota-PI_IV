@@ -3,6 +3,8 @@ import React from 'react';
 interface Route {
     name: string;
     neighborhoods: string[];
+    startTime: string;
+    endTime: string;
 }
 
 interface CalendarDayProps {
@@ -18,7 +20,12 @@ const CalendarDay: React.FC<CalendarDayProps> = ({ day, routes }) => {
                 <div className="row">
                     {routes.map((route, index) => (
                         <div key={index} className={`col-md-6 ${index === 0 && routes.length > 1 ? 'border-end' : ''}`}>
-                            <p className="mb-1 small"><strong>{route.name}:</strong></p>
+                            <p className="mb-1 small">
+                                <strong>{route.name}</strong> 
+                                {route.startTime && route.endTime && (
+                                    <span className="text-success ms-2 fw-bold">({route.startTime} - {route.endTime})</span>
+                                )}
+                            </p>
                             <ul className="small text-muted ps-3">
                                 {route.neighborhoods.map((n, i) => (
                                     <li key={i}>{n}</li>

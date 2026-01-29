@@ -9,6 +9,8 @@ interface DaySchedule {
     routes: {
         name: string;
         neighborhoods: string[];
+        startTime: string;
+        endTime: string;
     }[];
 }
 
@@ -59,7 +61,9 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ filterTerm }) => {
 
                         scheduleByDay[dayIndex].routes.push({
                             name: route.name,
-                            neighborhoods: routeNeighborhoods
+                            neighborhoods: routeNeighborhoods,
+                            startTime: route.startTime || (route as any).start_time || '',
+                            endTime: route.endTime || (route as any).end_time || ''
                         });
                     }
                 });

@@ -31,11 +31,11 @@ const SpecialMaterials: React.FC = () => {
                                     </li>
                                     <li className="d-flex gap-3 align-items-start">
                                         <FaCheck className="text-warning mt-1 flex-shrink-0" /> 
-                                        <span>Filtre as impurezas e coloque em uma **garrafa PET**.</span>
+                                        <span>Filtre as impurezas e coloque em uma <strong>garrafa PET</strong>.</span>
                                     </li>
                                     <li className="d-flex gap-3 align-items-start">
                                         <FaCheck className="text-warning mt-1 flex-shrink-0" /> 
-                                        <span>Leve ao Ecoponto da **SEMAM** ou parceiros autorizados.</span>
+                                        <span>Leve ao Ecoponto da <strong>SEMAM</strong> ou parceiros autorizados.</span>
                                     </li>
                                 </ul>
                             </div>
@@ -58,12 +58,12 @@ const SpecialMaterials: React.FC = () => {
                             <div className="bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-10">
                                 <h6 className="fw-bold text-info mb-3">Orientações:</h6>
                                 <p className="small mb-3 text-white text-opacity-90 fst-italic">
-                                    Estes itens **não devem** ser deixados na calçada. O descarte deve ser feito:
+                                    Estes itens <strong>não devem</strong> ser deixados na calçada. O descarte deve ser feito:
                                 </p>
                                 <ul className="small mb-0 list-unstyled d-flex flex-column gap-3">
                                     <li className="d-flex gap-3 align-items-start">
                                         <FaMapMarkerAlt className="text-info mt-1 flex-shrink-0" /> 
-                                        <span>Entregar diretamente no **Ecoponto da SEMAM**.</span>
+                                        <span>Entregar diretamente no <strong>Ecoponto da SEMAM</strong>.</span>
                                     </li>
                                     <li className="d-flex gap-3 align-items-start">
                                         <FaMapMarkerAlt className="text-info mt-1 flex-shrink-0" /> 
@@ -84,7 +84,7 @@ const SpecialMaterials: React.FC = () => {
                 <div className="d-flex gap-3">
                     <FaExclamationCircle className="text-warning fs-1 flex-shrink-0" />
                     <div>
-                        <h5 className="fw-bold mb-1">Atenção Catadores</h5>
+                        <h5 className="fw-bold mb-1">Atenção</h5>
                         <p className="text-muted mb-0">
                             Alguns materiais recicláveis como vidros quebrados devem ser embalados em caixas de papelão ou garrafas PET cortadas para evitar cortes e acidentes com os profissionais da coleta.
                         </p>
