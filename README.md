@@ -1,220 +1,84 @@
 # ♻️ EcoRota
 
-![Status](https://img.shields.io/badge/STATUS-CONCLUÍDO-brightgreen?style=for-the-badge)
-![Node](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+## 📌 Resumo do Projeto
 
-## 🌍 Objetivo do Sistema
+O **EcoRota** é uma plataforma web inovadora projetada para transformar a gestão e o acesso à coleta seletiva de resíduos. Conectando cidadãos a ecopontos e parceiros de reciclagem, o sistema visa promover a sustentabilidade e empoderar a comunidade com informações claras.
 
-O **EcoRota** é uma plataforma inovadora desenvolvida para transformar a gestão e o acesso à coleta seletiva de resíduos. Nosso objetivo é **empoderar a comunidade** com informações claras e acessíveis, conectando cidadãos aos pontos de coleta e parceiros de reciclagem.
+Através de uma interface moderna e intuitiva, o EcoRota permite:
+*   📍 **Localização ágil** de ecopontos e rotas de coleta via mapas interativos.
+*   📢 **Reporte de problemas** urbanos diretamente pelos cidadãos.
+*   🤝 **Conexão direta** entre a população e serviços de limpeza urbana.
+*   📊 **Gestão administrativa** eficiente para moderadores e gestores públicos.
 
-Através de uma interface intuitiva e um sistema robusto, visamos:
-*   📍 **Facilitar a localização** de ecopontos e rotas de coleta.
-*   🤝 **Conectar parceiros** e empresas de reciclagem aos cidadãos.
-*   📢 **Permitir o reporte** ágil de problemas relacionados à limpeza urbana.
-*   🌿 **Promover a sustentabilidade** incentivando o descarte correto.
+## 📸 Galeria do Projeto
 
----
+Conheça as interfaces que compõem a experiência do EcoRota:
 
-## 🏗️ Arquitetura Back-End
+| Tela | Descrição |
+| :--- | :--- |
+| ![Home Search](frontend/public/home_search_neighborhoods.png) | **Busca por Bairros**: Página inicial intuitiva permitindo que cidadãos encontrem serviços de coleta em sua região. |
+| ![Ecopoints Map](frontend/public/ecopoints_search_maps.png) | **Mapa de Ecopontos**: Visualização geoespacial interativa para localizar pontos de descarte correto. |
+| ![Subscriber Report](frontend/public/subscriber_issue_report.png) | **Reporte de Problemas**: Interface para que cidadãos relatem questões como lixo acumulado ou falta de coleta. |
+| ![Subscriber Modal](frontend/public/subscriber_modal.png) | **Interação do Usuário**: Modais responsivos para ações rápidas e feedbacks do sistema. |
+| ![Admin Dashboard](frontend/public/admin_dashboard_logged_in.png) | **Painel Administrativo**: Visão geral para gestores acompanharem métricas e status do sistema. |
+| ![Admin Details](frontend/public/admin_view_problem_details.png) | **Detalhes de Ocorrências**: Área administrativa para análise e tratativa de problemas reportados pela comunidade. |
 
-O núcleo do sistema foi construído sobre os pilares da **Clean Architecture** (Arquitetura Limpa), garantindo um código desacoplado, testável e escalável.
+## 📅 Gestão do Projeto
 
-### 🚀 Stack Tecnológica
-*   **Node.js & Express**: Framework web rápido e minimalista para a API RESTful.
-*   **TypeScript**: Tipagem estática para maior segurança e produtividade.
-*   **Prisma ORM**: Gerenciamento de banco de dados moderno e type-safe.
-*   **MySQL**: Banco de dados relacional confiável.
-*   **Jest**: Framework de testes para garantir a qualidade do código.
-*   **Zod**: Validação de esquemas e dados de entrada.
+O desenvolvimento do EcoRota foi meticulosamente acompanhado através do **GitHub Projects**, garantindo transparência e organização. Utilizamos uma estrutura de quadros **Kanban** para monitorar o ciclo de vida de cada funcionalidade.
 
-### 🧩 Camadas do Sistema
+*   **Issues**: Cada nova feature, correção ou melhoria foi documentada como uma Issue, servindo como a fonte da verdade para o que precisava ser feito.
+*   **Pull Requests**: As tasks foram desenvolvidas em branches separadas e integradas via Pull Requests, que fechavam automaticamente as Issues associadas após o merge.
+*   **Acompanhe o Quadro**: Você pode visualizar o histórico e o status das tarefas acessando nosso [Board no GitHub Projects](https://github.com/users/SamuelLopess03/projects/6).
 
-A aplicação é modularizada em quatro camadas concêntricas. 
-> 💡 **Nota**: Para demonstrar a arquitetura, utilizaremos o módulo de **Ecopoint** (Ecoponto) como exemplo em todas as camadas abaixo.
+## 🏗️ Arquitetura e Tecnologias
 
-<details>
-<summary><strong>📂 1. Domain (Domínio)</strong> - Clique para expandir</summary>
+O EcoRota foi desenvolvido seguindo os princípios da **Clean Architecture** e **REST**, garantindo um sistema desacoplado, escalável e de fácil manutenção. O projeto é dividido em dois grandes pilares:
 
-A camada mais interna. Aqui residem as **Entidades** e regras de negócio puras. Ela desconhece banco de dados ou interfaces web.
+### 🎨 Frontend (Aplicação Web)
+Desenvolvido como uma **Single Page Application (SPA)** moderna e responsiva.
+*   **React + TypeScript**: Combinação poderosa para criar interfaces componentizadas, tipadas e seguras.
+*   **Vite**: Ferramenta de build para um desenvolvimento ultra-rápido e bundles otimizados.
+*   **Bootstrap 5**: Framework de UI para garantir responsividade e estética consistente.
+*   **Axios**: Cliente HTTP para comunicação eficiente com a API.
+*   **Deploy**: O build de produção é servido por um servidor **Nginx** de alta performance dentro de um container Docker, utilizando um processo de construção *multistage* para gerar uma imagem leve e segura.
 
-*   **Exemplo (`Ecopoint.ts`)**: Define a estrutura central de um Ecoponto, utilizando Value Objects para validação (como `GeoLocation` e `AcceptedMaterials`).
+### ⚙️ Backend (API RESTful)
+Uma API robusta construída sobre Node.js, focada em segurança, performance e integridade de dados.
+*   **Node.js & Express**: Base sólida para processamento assíncrono e rotas da API.
+*   **TypeScript**: Garante a integridade do código e facilita a manutenção no lado do servidor.
+*   **Segurança**:
+    *   **JWT (JSON Web Token)**: Autenticação stateless segura.
+    *   **Bcrypt**: Hashing de senhas para proteção de credenciais.
+    *   **Zod**: Validação rigorosa de esquemas de entrada de dados.
+*   **Arquivos**: **Multer** para gerenciamento de uploads de arquivos.
+*   **Dados**: **Prisma ORM** para interação type-safe com o banco de dados **MySQL**.
+*   **Deploy**: Assim como o frontend, utiliza Docker *multistage builds* para separar as dependências de desenvolvimento da produção, resultando em containers otimizados.
 
-```typescript
-// backend/src/domain/entities/Ecopoint.ts
-export class Ecopoint {
-    constructor(
-        public readonly id: number,
-        public name: string,
-        // Value Objects encapsulam regras de validação complexas
-        public acceptedMaterials: AcceptedMaterials,
-        public geoLocation: GeoLocation,
-        // ...
-        public readonly createdAt: Date
-    ) { }
-}
-```
-</details>
+## 🐳 Orquestração com Docker Compose
 
-<details>
-<summary><strong>⚙️ 2. Application (Aplicação)</strong> - Clique para expandir</summary>
+Para garantir que o ambiente seja replicável e consistente (do desenvolvimento à produção), utilizamos o **Docker Compose** como orquestrador. Ele define e gerencia a criação dos três serviços essenciais do ecossistema EcoRota:
 
-Orquestra os **Casos de Uso** (Use Cases). É aqui que a "mágica" acontece: buscar dados, aplicar regras e devolver resultados.
+1.  **`backend`**: A API Node.js, construída a partir do `Dockerfile` no diretório `backend/`.
+2.  **`frontend`**: O servidor web Nginx, construído a partir do `Dockerfile` no diretório `frontend/`.
+3.  **`database`**: O container MySQL oficial, persistindo dados em volumes Docker gerenciados.
 
-*   **Exemplo (`CreateEcopointUseCase.ts`)**: Recebe dados brutos, converte para entidades de domínio e persiste através de repositórios.
+Com um único comando (`docker-compose up`), todo o ambiente é provisionado, as redes são configuradas e os serviços se conectam automaticamente.
 
-```typescript
-// backend/src/application/use-cases/ecopoint/CreateEcopointUseCase.ts
-export class CreateEcopointUseCase {
-  constructor(private ecopointRepository: EcopointRepository) { }
+## 🧪 Qualidade e Testes
 
-  async execute(input: CreateEcopointInputDTO): Promise<CreateEcopointOutputDTO> {
-    // Converte DTO para Value Objects
-    const geoLocation = new GeoLocation(input.latitude, input.longitude);
-    
-    // Chama o repositório (Interface) para salvar
-    const ecopoint = await this.ecopointRepository.create({
-      name: input.name,
-      geoLocation,
-      // ...
-    });
-    
-    return this.mapToOutput(ecopoint);
-  }
-}
-```
-</details>
+A estabilidade do EcoRota é assegurada por uma estratégia de testes abrangente utilizando **Jest**:
 
-<details>
-<summary><strong>🧱 3. Infrastructure (Infraestrutura)</strong> - Clique para expandir</summary>
+### ✅ Testes Unitários
+Focados na lógica de negócio e regras de domínio. Como não dependem de banco de dados ou redes, são extremamente rápidos e garantem que componentes individuais (como Entidades e Casos de Uso) funcionem corretamente de forma isolada.
 
-Implementa as interfaces definidas nas camadas superiores. Aqui reside a comunicação com o Banco de Dados, APIs externas, etc.
+### 🔗 Testes de Integração
+Validam o fluxo completo de uma requisição. Eles garantem que a API Express receba os dados, o Prisma interaja corretamente com o banco de dados e a resposta seja a esperada. Esses testes são cruciais para assegurar que as "peças" do sistema se encaixem perfeitamente no mundo real.
 
-*   **Tecnologia**: Utilizamos **Prisma ORM** pela sua segurança de tipos e facilidade de migração.
-*   **Repositórios**: O `PrismaEcopointRepository` traduz as chamadas do domínio para queries do banco de dados.
-</details>
+## 🤝 Como Contribuir
 
-<details>
-<summary><strong>🔌 4. Presentation (Apresentação)</strong> - Clique para expandir</summary>
+O EcoRota é um projeto open-source e adoraríamos receber sua contribuição! Seja para corrigir um bug, sugerir uma nova funcionalidade ou melhorar a documentação, sinta-se à vontade para participar.
 
-O ponto de entrada. Recebe requisições HTTP (Express), valida a entrada (Zod) e delega para os casos de uso.
-
-*   **Exemplo (`EcopointController.ts`)**:
-
-```typescript
-// backend/src/presentation/controllers/EcopointController.ts
-export class EcopointController {
-    async create(req: Request, res: Response) {
-        // Validação de entrada com Zod
-        const data = createEcopointSchema.parse(req.body);
-        
-        // Execução do caso de uso
-        const output = await this.createEcopointUseCase.execute({ ...data });
-
-        return res.status(201).json(output);
-    }
-}
-```
-</details>
-
----
-
-## 💻 Arquitetura Front-End
-
-Nosso Front-End é uma **Single Page Application (SPA)** moderna, rápida e responsiva.
-
-### 🚀 Stack Tecnológica
-*   **Vite**: Build tool de próxima geração, garantindo desenvolvimento ultra-rápido.
-*   **React + TypeScript**: Para interfaces componentizadas e type-safe.
-*   **Bootstrap 5**: Estilização robusta e responsiva.
-*   **Axios**: Cliente HTTP para comunicação com o Back-End.
-
-### 📂 Estrutura do Projeto
-
-A organização de pastas favorece a escalabilidade e manutenção:
-
-```bash
-frontend/src/
-├── components/       # Componentes Reutilizáveis
-│   ├── common/       # Botões, Inputs, Cards genéricos
-│   ├── ecopontos/    # Componentes específicos de Ecopontos
-│   │   ├── PartnerCard.tsx     # Card de exibição de parceiros
-│   │   ├── EcopointSearch.tsx  # Busca complexa com filtros
-│   │   └── ...
-├── pages/            # Páginas da aplicação (Rotas)
-│   ├── Home.tsx      # Landing Page
-│   ├── Ecopontos.tsx # Listagem e Busca
-│   └── ...
-├── services/         # Camada de Integração com API
-│   ├── api.ts              # Configuração do Axios
-│   └── ecopointService.ts  # Métodos: list, create, findById
-└── context/          # Gerenciamento de Estado Global (Auth, etc)
-```
-
-### 🌟 Destaques da Implementação
-
-1.  **Integração com API (`services/`)**:
-    Centralizamos todas as chamadas HTTP em serviços dedicados. Isso facilita a manutenção e tratamento de erros.
-    ```typescript
-    // frontend/src/services/ecopointService.ts
-    export const ecopointService = {
-        list: async (params?: EcopointFilter) => {
-            const response = await api.get('/ecopoints', { params });
-            return response.data;
-        }
-    };
-    ```
-
-2.  **Páginas Inteligentes (`pages/Ecopontos.tsx`)**:
-    As páginas gerenciam o estado da aplicação e consomem os serviços. O componente `Ecopontos` carrega os dados ao montar, trata estados de carregamento (`loading`) e renderiza os componentes de apresentação.
-
----
-
-## 🐳 Containerização (Docker)
-
-Garantimos que a aplicação rode exatamente igual em qualquer máquina. O projeto é orquestrado via `docker-compose`.
-
-**Serviços:**
-1.  **Database**: MySQL 8.
-2.  **Backend**: Node.js API (Porta 3001).
-3.  **Frontend**: Servidor web (Porta 3000).
-
-### Como Rodar o Projeto
-
-Utilize os comandos abaixo para configurar o ambiente.
-
-**1. Clone o repositório:**
-```bash
-git clone https://github.com/SeuUsuario/EcoRota-PI_IV.git
-```
-
-**2. Suba os containers:**
-```bash
-docker-compose up --build
-```
-
----
-
-## 🧪 Testes
-
-A qualidade e estabilidade do código são prioridades no EcoRota. Implementamos uma estratégia de testes robusta utilizando o framework **Jest**, cobrindo desde regras de negócio isoladas até o comportamento integral da API.
-
-### Testes Unitários
-Estes testes focam na validação das camadas de **Domínio** e **Aplicação**. Eles são executados rapidamente pois não dependem de infraestrutura externa (como banco de dados). Garantem que as entidades, Value Objects e Casos de Uso funcionem conforme esperado em isolamento.
-
-Para executar os testes unitários:
-```bash
-npm run test:unit
-```
-
-### Testes de Integração
-Estes testes verificam a comunicação entre as camadas e a persisitência de dados. Eles sobem um ambiente controlado (banco de dados de teste ou em memória) para garantir que a **API Node.js/Express** receba requisições, processe através do Prisma ORM e retorne as respostas corretas.
-
-Para executar os testes de integração:
-```bash
-npm run test:integration
-```
+1.  **Abra uma Issue**: Encontrou um problema ou tem uma ideia? Abra uma issue para discutirmos.
+2.  **Faça um Fork**: Crie sua própria cópia do projeto para trabalhar.
+3.  **Crie um Pull Request**: Implementou sua melhoria? Envie um PR descrevendo suas alterações. Faremos o review com prazer e, se tudo estiver certo, o merge será feito!
