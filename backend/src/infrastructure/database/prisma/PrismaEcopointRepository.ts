@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../../../prisma/generated/client/client.js";
+import { PrismaClient } from "@prisma/client";
 import { Ecopoint } from "../../../domain/entities/Ecopoint.js";
 import { EcopointRepository } from "../../../domain/repositories/EcopointRepository.js";
 import { CollectionTime } from "../../../domain/value-objects/CollectionTime.js";

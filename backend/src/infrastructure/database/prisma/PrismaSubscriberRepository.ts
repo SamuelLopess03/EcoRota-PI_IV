@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../../../prisma/generated/client/client.js";
+import { PrismaClient } from "@prisma/client";
 import { Subscriber } from "../../../domain/entities/Subscriber.js";
 import { SubscriberRepository } from "../../../domain/repositories/SubscriberRepository.js";
 import { Email } from "../../../domain/value-objects/Email.js";

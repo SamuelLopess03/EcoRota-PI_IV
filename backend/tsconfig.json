@@ -22,10 +22,10 @@
     "forceConsistentCasingInFileNames": true,
 
     "resolveJsonModule": true,
-
+    "rootDir": "./src",
     "outDir": "./dist"
   },
 
-  "include": ["src", "prisma"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "tests", "prisma"]
 }

@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../../../prisma/generated/client/client.js";
+import { PrismaClient } from "@prisma/client";
 import { Administrator } from "../../../domain/entities/Administrator.js";
 import { AdministratorRepository } from "../../../domain/repositories/AdministratorRepository.js";
 import { Email } from "../../../domain/value-objects/Email.js";

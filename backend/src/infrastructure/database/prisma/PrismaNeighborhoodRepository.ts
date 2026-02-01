@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../../../prisma/generated/client/client.js";
+import { PrismaClient } from "@prisma/client";
 import { Neighborhood } from "../../../domain/entities/Neighborhood.js";
 import { NeighborhoodRepository } from "../../../domain/repositories/NeighborhoodRepository.js";
 import { PopulationEstimate } from "../../../domain/value-objects/PopulationEstimate.js";

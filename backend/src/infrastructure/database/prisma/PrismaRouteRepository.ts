@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../../../prisma/generated/client/client.js";
+import { PrismaClient } from "@prisma/client";
 import { Route } from "../../../domain/entities/Route.js";
 import { RouteRepository } from "../../../domain/repositories/RouteRepository.js";
 import { CollectionDays } from "../../../domain/value-objects/CollectionDays.js";
