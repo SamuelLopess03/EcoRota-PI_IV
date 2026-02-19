@@ -32,8 +32,9 @@ describe("Entity: Ecopoint", () => {
     const ecopoint = new Ecopoint(
       1,
       "Ecoponto A",
+      null, // partnerName
       materials,
-      address,
+      address.getGeoLocation()!,
       days,
       time,
       5,

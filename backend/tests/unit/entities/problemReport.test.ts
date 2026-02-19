@@ -40,6 +40,7 @@ describe("Entity: ProblemReport", () => {
       dates.createdAt,
       dates.updatedAt,
       777,
+      null,
       null
     );
 

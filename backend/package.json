@@ -5,11 +5,11 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx --watch src/server.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js -c jest.config.ts",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js -c jest.config.ts --runInBand",
     "test:unit": "npm run test -- tests/unit",
-    "test:integration": "npm run test -- tests/integration",
+    "test:integration": "npm run test -- tests/integration --runInBand",
     "test:watch": "npm run test -- --watch",
     "test:one": "npm run test --"
   },
