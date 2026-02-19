@@ -22,10 +22,11 @@
     "forceConsistentCasingInFileNames": true,
 
     "resolveJsonModule": true,
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "rootDir": "./",
+    "outDir": "./dist",
+    "types": ["node", "jest"]
   },
 
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "tests", "prisma"]
+  "include": ["src", "tests"],
+  "exclude": ["node_modules", "dist", "prisma"]
 }
