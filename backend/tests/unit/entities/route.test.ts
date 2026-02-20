@@ -1,4 +1,5 @@
 import { Route } from "../../../src/domain/entities/Route.js";
+import { WeekDay } from "../../../src/domain/value-objects/WeekDay.js";
 import {
   makeCollectionDays,
   makeCollectionTime,
@@ -27,6 +28,9 @@ describe("Entity: Route", () => {
 
     expect(route.id).toBe(1);
     expect(route.name).toBe("Rota Centro");
+    expect(route.collectionDays.getDays()).toEqual([WeekDay.MONDAY, WeekDay.WEDNESDAY]);
+    expect(route.collectionTime.getFormattedInterval()).toBe("08:00 - 12:00");
+    expect(route.collectionType.getValue()).toBe("Coleta seletiva");
     expect(route.adminIdCreated).toBe(10);
     expect(route.adminIdUpdated).toBeNull();
   });

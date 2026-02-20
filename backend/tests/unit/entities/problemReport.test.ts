@@ -31,7 +31,12 @@ describe("Entity: ProblemReport", () => {
       null
     );
 
+    expect(report.id).toBe(1);
+    expect(report.protocol.getValue()).toBe("PR-2025-0001");
+    expect(report.status.getValue()).toBe("PENDING");
+    expect(report.description.getValue()).toBe("Lixo espalhado na calçada há dias.");
     expect(report.subscriberId).toBe(777);
     expect(report.resolvedByAdminId).toBeNull();
+    expect(report.justification).toBeNull();
   });
 });
