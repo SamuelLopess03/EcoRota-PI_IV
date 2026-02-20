@@ -8,16 +8,10 @@ import {
 
 describe("Entity: Route", () => {
   it("deve criar uma rota com os campos corretos", () => {
-    console.log("\n==============================");
-    console.log("[Route] Iniciando teste");
-    console.log("==============================");
-
     const dates = makeDates();
     const days = makeCollectionDays();
     const time = makeCollectionTime();
     const type = makeCollectionType();
-
-    console.log("[Route] VOs (obj):", { days, time, type });
 
     const route = new Route(
       1,
@@ -31,13 +25,9 @@ describe("Entity: Route", () => {
       null
     );
 
-    console.log("[Route] Route criada:", route);
-
     expect(route.id).toBe(1);
     expect(route.name).toBe("Rota Centro");
     expect(route.adminIdCreated).toBe(10);
     expect(route.adminIdUpdated).toBeNull();
-
-    console.log("[Route] ✅ OK");
   });
 });
