@@ -14,6 +14,7 @@ import { ProblemAttachments } from "../../src/domain/value-objects/ProblemAttach
 import { ProblemStatus } from "../../src/domain/value-objects/ProblemStatus.js";
 import { ProblemDescription } from "../../src/domain/value-objects/ProblemDescription.js";
 import { ProblemType } from "../../src/domain/value-objects/ProblemType.js";
+import { ProblemJustification } from "../../src/domain/value-objects/ProblemJustification.js";
 
 export const makeDates = (): { createdAt: Date; updatedAt: Date } => ({
   createdAt: new Date("2025-01-01T10:00:00.000Z"),
@@ -58,3 +59,6 @@ export const makeProblemDescription = () =>
   new ProblemDescription("Lixo espalhado na calçada há dias.");
 
 export const makeProblemType = () => new ProblemType("Lixo espalhado");
+
+export const makeProblemJustification = (value = "Justificativa válida com mais de dez caracteres.") =>
+  new ProblemJustification(value);

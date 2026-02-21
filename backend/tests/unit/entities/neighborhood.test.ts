@@ -4,7 +4,7 @@ import {
   makePostalCode,
   makeGeoLocation,
   makeDates,
-} from "../../helpers/factories.js";
+} from "../../helpers/valueObjectFactories.js";
 
 describe("Entity: Neighborhood", () => {
   it("deve criar neighborhood com VOs válidos", () => {

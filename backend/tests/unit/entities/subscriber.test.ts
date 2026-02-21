@@ -1,5 +1,5 @@
 import { Subscriber } from "../../../src/domain/entities/Subscriber.js";
-import { makeEmail, makeAddress, makeDates } from "../../helpers/factories.js";
+import { makeEmail, makeAddress, makeDates } from "../../helpers/valueObjectFactories.js";
 
 describe("Entity: Subscriber", () => {
   it("deve criar subscriber com email e address válidos", () => {

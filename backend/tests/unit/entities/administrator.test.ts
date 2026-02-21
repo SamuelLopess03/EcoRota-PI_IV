@@ -1,5 +1,5 @@
 import { Administrator } from "../../../src/domain/entities/Administrator.js";
-import { makeEmail, makeDates } from "../../helpers/factories.js";
+import { makeEmail, makeDates } from "../../helpers/valueObjectFactories.js";
 
 describe("Entity: Administrator", () => {
   it("deve criar administrador com email válido", () => {

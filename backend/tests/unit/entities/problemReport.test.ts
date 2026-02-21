@@ -6,7 +6,7 @@ import {
   makeProblemDescription,
   makeProblemType,
   makeDates,
-} from "../../helpers/factories.js";
+} from "../../helpers/valueObjectFactories.js";
 
 describe("Entity: ProblemReport", () => {
   it("deve criar report com VOs e campos corretos", () => {

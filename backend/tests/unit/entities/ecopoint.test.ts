@@ -5,7 +5,7 @@ import {
   makeCollectionTime,
   makeDates,
   makeGeoLocation,
-} from "../../helpers/factories.js";
+} from "../../helpers/valueObjectFactories.js";
 
 describe("Entity: Ecopoint", () => {
   it("deve criar ecoponto com campos corretos", () => {

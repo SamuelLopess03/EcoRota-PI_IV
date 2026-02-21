@@ -5,7 +5,7 @@ import {
   makeCollectionTime,
   makeCollectionType,
   makeDates,
-} from "../../helpers/factories.js";
+} from "../../helpers/valueObjectFactories.js";
 
 describe("Entity: Route", () => {
   it("deve criar uma rota com os campos corretos", () => {
