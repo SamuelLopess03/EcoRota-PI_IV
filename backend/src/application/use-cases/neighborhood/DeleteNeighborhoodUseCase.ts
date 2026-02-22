@@ -11,6 +11,7 @@ export class DeleteNeighborhoodUseCase {
    * Executa a remoção.
    * @param id ID do bairro.
    * @throws {EntityNotFoundError} Se o bairro não existir.
+   * @throws {DependencyError} Se o bairro tiver ecopontos ou assinantes vinculados.
    * @throws {PersistenceError} Se ocorrer uma falha técnica na persistência.
    */
   async execute(id: number): Promise<void> {
