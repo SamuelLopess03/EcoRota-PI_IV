@@ -1,10 +1,10 @@
-import { prisma } from "../../../src/infrastructure/database/prismaClient.js";
-import { PrismaSubscriberRepository } from "../../../src/infrastructure/database/prisma/PrismaSubscriberRepository.js";
-import { PrismaNeighborhoodRepository } from "../../../src/infrastructure/database/prisma/PrismaNeighborhoodRepository.js";
-import { RegisterSubscriberUseCase } from "../../../src/application/use-cases/subscriber/RegisterSubscriberUseCase.js";
-import { UnsubscribeUseCase } from "../../../src/application/use-cases/subscriber/UnsubscribeUseCase.js";
-import { resetDatabase } from "../../setup-db.js";
-import { EntityNotFoundError } from "../../../src/domain/errors/persistence/EntityNotFoundError.js";
+import { prisma } from "../../../../src/infrastructure/database/prismaClient.js";
+import { PrismaSubscriberRepository } from "../../../../src/infrastructure/database/prisma/PrismaSubscriberRepository.js";
+import { PrismaNeighborhoodRepository } from "../../../../src/infrastructure/database/prisma/PrismaNeighborhoodRepository.js";
+import { RegisterSubscriberUseCase } from "../../../../src/application/use-cases/subscriber/RegisterSubscriberUseCase.js";
+import { UnsubscribeUseCase } from "../../../../src/application/use-cases/subscriber/UnsubscribeUseCase.js";
+import { resetDatabase } from "../../../setup-db.js";
+import { EntityNotFoundError } from "../../../../src/domain/errors/persistence/EntityNotFoundError.js";
 
 describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
   beforeAll(async () => {

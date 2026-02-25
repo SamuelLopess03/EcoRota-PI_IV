@@ -8,6 +8,7 @@ import { InvalidEmailError } from "../../../domain/errors/InvalidEmailError.js";
 import { InvalidAddressError } from "../../../domain/errors/InvalidAddressError.js";
 import { InvalidTokenError } from "../../../domain/errors/providers/InvalidTokenError.js";
 import { InvalidCredentialsError } from "../../../application/use-cases/administrator/errors/InvalidCredentialsError.js";
+import { ZodError } from "zod";
 
 /**
  * @function ErrorHandler
@@ -28,9 +29,13 @@ export const ErrorHandler = (
     if (
         error instanceof InvalidEmailError ||
         error instanceof InvalidAddressError ||
+        error instanceof ZodError ||
         error.name.startsWith("Invalid")
     ) {
-        return res.status(400).json({ error: error.message });
+        return res.status(400).json({ 
+            error: error instanceof ZodError ? "Dados de entrada inválidos." : error.message,
+            details: error instanceof ZodError ? error.issues : undefined
+        });
     }
 
     // Erros de Entidade Não Encontrada (404 Not Found)
