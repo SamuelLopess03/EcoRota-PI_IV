@@ -4,6 +4,7 @@ import { PrismaNeighborhoodRepository } from "../../../src/infrastructure/databa
 import { RegisterSubscriberUseCase } from "../../../src/application/use-cases/subscriber/RegisterSubscriberUseCase.js";
 import { UnsubscribeUseCase } from "../../../src/application/use-cases/subscriber/UnsubscribeUseCase.js";
 import { resetDatabase } from "../../setup-db.js";
+import { EntityNotFoundError } from "../../../src/domain/errors/persistence/EntityNotFoundError.js";
 
 describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
   beforeAll(async () => {
@@ -19,7 +20,6 @@ describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
   }, 30000);
 
   it("deve deletar um assinante (unsubscribe) e remover do banco", async () => {
-    // 🔹 admin (pré-requisito)
     const admin = await prisma.administrador.create({
       data: {
         name: "Admin Teste",
@@ -28,7 +28,6 @@ describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
       },
     });
 
-    // 🔹 rota (pré-requisito)
     const route = await prisma.route.create({
       data: {
         name: "Rota Sul",
@@ -39,7 +38,6 @@ describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
       },
     });
 
-    // 🔹 bairro (pré-requisito)
     const neighborhood = await prisma.neighborhood.create({
       data: {
         name: "Bairro Novo",
@@ -54,7 +52,6 @@ describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
     const subscriberRepo = new PrismaSubscriberRepository(prisma);
     const neighborhoodRepo = new PrismaNeighborhoodRepository(prisma);
 
-    // 🔹 cria primeiro
     const registerUsecase = new RegisterSubscriberUseCase(
       subscriberRepo,
       neighborhoodRepo
@@ -68,7 +65,6 @@ describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
       postalCode: "63700-111",
     });
 
-    // ✅ delete: execute(id)
     const unsubscribeUsecase = new UnsubscribeUseCase(subscriberRepo);
     await unsubscribeUsecase.execute(created.id);
 
@@ -77,5 +73,14 @@ describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
     });
 
     expect(subscriberDb).toBeNull();
+  }, 30000);
+
+  it("deve lançar EntityNotFoundError ao remover assinante inexistente", async () => {
+    const subscriberRepo = new PrismaSubscriberRepository(prisma);
+    const usecase = new UnsubscribeUseCase(subscriberRepo);
+
+    const promise = usecase.execute(9999);
+    await expect(promise).rejects.toThrow(EntityNotFoundError);
+    await expect(promise).rejects.toThrow("Assinante com identificador '9999' não foi encontrado.");
   }, 30000);
 });

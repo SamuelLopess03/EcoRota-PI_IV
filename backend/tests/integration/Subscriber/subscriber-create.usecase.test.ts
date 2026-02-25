@@ -3,6 +3,8 @@ import { PrismaSubscriberRepository } from "../../../src/infrastructure/database
 import { PrismaNeighborhoodRepository } from "../../../src/infrastructure/database/prisma/PrismaNeighborhoodRepository.js";
 import { RegisterSubscriberUseCase } from "../../../src/application/use-cases/subscriber/RegisterSubscriberUseCase.js";
 import { resetDatabase } from "../../setup-db.js";
+import { ConflictError } from "../../../src/domain/errors/persistence/ConflictError.js";
+import { EntityNotFoundError } from "../../../src/domain/errors/persistence/EntityNotFoundError.js";
 
 describe("Integration: RegisterSubscriberUseCase + Prisma (DB real)", () => {
   beforeAll(async () => {
@@ -18,7 +20,6 @@ describe("Integration: RegisterSubscriberUseCase + Prisma (DB real)", () => {
   }, 30000);
 
   it("deve criar um assinante vinculado a um bairro", async () => {
-    // 🔹 admin (pré-requisito)
     const admin = await prisma.administrador.create({
       data: {
         name: "Admin Teste",
@@ -27,7 +28,6 @@ describe("Integration: RegisterSubscriberUseCase + Prisma (DB real)", () => {
       },
     });
 
-    // 🔹 rota (pré-requisito)
     const route = await prisma.route.create({
       data: {
         name: "Rota Sul",
@@ -35,12 +35,9 @@ describe("Integration: RegisterSubscriberUseCase + Prisma (DB real)", () => {
         collection_days: "TER,QUI",
         collection_time: "14:00",
         admin_id_created: admin.id,
-        // se seu schema exigir admin_id_updated, set aqui também:
-        // admin_id_updated: admin.id,
       },
     });
 
-    // 🔹 bairro (pré-requisito)
     const neighborhood = await prisma.neighborhood.create({
       data: {
         name: "Bairro Novo",
@@ -49,8 +46,6 @@ describe("Integration: RegisterSubscriberUseCase + Prisma (DB real)", () => {
         cep: "63700-111",
         route_id: route.id,
         admin_id_created: admin.id,
-        // se seu schema exigir admin_id_updated, set aqui também:
-        // admin_id_updated: admin.id,
       },
     });
 
@@ -68,7 +63,6 @@ describe("Integration: RegisterSubscriberUseCase + Prisma (DB real)", () => {
       neighborhoodId: neighborhood.id,
       number: "123",
       postalCode: "63700-111",
-      // se o DTO exigir complement/latitude/longitude, adicione aqui
     });
 
     expect(output.id).toBeTruthy();
@@ -80,5 +74,70 @@ describe("Integration: RegisterSubscriberUseCase + Prisma (DB real)", () => {
     expect(subscriberDb).not.toBeNull();
     expect(subscriberDb?.email).toBe("usuario@teste.com");
     expect(subscriberDb?.neighborhood_id).toBe(neighborhood.id);
+  }, 30000);
+
+  it("não deve permitir cadastrar assinante com e-mail duplicado (ConflictError)", async () => {
+    const admin = await prisma.administrador.create({
+      data: { name: "Admin", email: "admin@err.com", password: "hash" },
+    });
+
+    const route = await prisma.route.create({
+      data: {
+        name: "Rota Err",
+        collection_type: "CONVENCIONAL",
+        collection_days: "SEG",
+        collection_time: "10:00",
+        admin_id_created: admin.id,
+      },
+    });
+
+    const neighborhood = await prisma.neighborhood.create({
+      data: {
+        name: "Bairro Err",
+        latitude: 0,
+        longitude: 0,
+        cep: "00000-000",
+        route_id: route.id,
+        admin_id_created: admin.id,
+      },
+    });
+
+    const repo = new PrismaSubscriberRepository(prisma);
+    const nRepo = new PrismaNeighborhoodRepository(prisma);
+    const usecase = new RegisterSubscriberUseCase(repo, nRepo);
+
+    await usecase.execute({
+      email: "duplicate@teste.com",
+      street: "Rua 1",
+      neighborhoodId: neighborhood.id,
+      number: "1",
+      postalCode: "63700-111",
+    });
+
+    const promise = usecase.execute({
+        email: "duplicate@teste.com",
+        street: "Rua 2",
+        neighborhoodId: neighborhood.id,
+        number: "2",
+        postalCode: "63700-111",
+      });
+    await expect(promise).rejects.toThrow(ConflictError);
+    await expect(promise).rejects.toThrow("Assinante com e-mail 'duplicate@teste.com' já existe.");
+  }, 30000);
+
+  it("deve lançar EntityNotFoundError se o bairro não existir", async () => {
+    const repo = new PrismaSubscriberRepository(prisma);
+    const nRepo = new PrismaNeighborhoodRepository(prisma);
+    const usecase = new RegisterSubscriberUseCase(repo, nRepo);
+
+    const promise = usecase.execute({
+        email: "alone@teste.com",
+        street: "Rua Sem Bairro",
+        neighborhoodId: 9999,
+        number: "0",
+        postalCode: "63700-111",
+      });
+    await expect(promise).rejects.toThrow(EntityNotFoundError);
+    await expect(promise).rejects.toThrow("Bairro com identificador '9999' não foi encontrado.");
   }, 30000);
 });
