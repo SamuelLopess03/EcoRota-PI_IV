@@ -27,7 +27,7 @@ model Administrador {
 
 model Route {
   id               Int            @id @default(autoincrement())
-  name             String
+  name             String         @unique
   collection_type  String
   created_at       DateTime       @default(now())
   updated_at       DateTime       @updatedAt

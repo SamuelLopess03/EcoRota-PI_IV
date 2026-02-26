@@ -1,8 +1,9 @@
-import { prisma } from "../../../src/infrastructure/database/prismaClient.js";
-import { PrismaRouteRepository } from "../../../src/infrastructure/database/prisma/PrismaRouteRepository.js";
-import { CreateRouteUseCase } from "../../../src/application/use-cases/route/CreateRouteUseCase.js";
-import { UpdateRouteUseCase } from "../../../src/application/use-cases/route/UpdateRouteUseCase.js";
-import { resetDatabase } from "../../setup-db.js";
+import { prisma } from "../../../../src/infrastructure/database/prismaClient.js";
+import { PrismaRouteRepository } from "../../../../src/infrastructure/database/prisma/PrismaRouteRepository.js";
+import { CreateRouteUseCase } from "../../../../src/application/use-cases/route/CreateRouteUseCase.js";
+import { UpdateRouteUseCase } from "../../../../src/application/use-cases/route/UpdateRouteUseCase.js";
+import { resetDatabase } from "../../../setup-db.js";
+import { EntityNotFoundError } from "../../../../src/domain/errors/persistence/EntityNotFoundError.js";
 
 describe("Integration: UpdateRouteUseCase + Prisma (DB real)", () => {
   beforeAll(async () => {
@@ -18,7 +19,6 @@ describe("Integration: UpdateRouteUseCase + Prisma (DB real)", () => {
   }, 30000);
 
   it("deve atualizar uma rota e persistir no banco", async () => {
-    // 🔹 admin
     const admin = await prisma.administrador.create({
       data: {
         name: "Admin Teste",
@@ -29,7 +29,6 @@ describe("Integration: UpdateRouteUseCase + Prisma (DB real)", () => {
 
     const routeRepository = new PrismaRouteRepository(prisma);
 
-    // 🔹 cria primeiro (via usecase)
     const createUseCase = new CreateRouteUseCase(routeRepository);
 
     const created = await createUseCase.execute({
@@ -41,7 +40,6 @@ describe("Integration: UpdateRouteUseCase + Prisma (DB real)", () => {
       adminId: admin.id,
     });
 
-    // ✅ update: execute(id, dto)
     const updateUseCase = new UpdateRouteUseCase(routeRepository);
 
     const updated = await updateUseCase.execute(created.id, {
@@ -64,5 +62,21 @@ describe("Integration: UpdateRouteUseCase + Prisma (DB real)", () => {
     expect(routeDb?.collection_days).toContain("tuesday");
     expect(routeDb?.collection_time).toContain("15:00");
     expect(routeDb?.collection_time).toContain("16:00");
-  });
+  }, 30000);
+
+  it("deve lançar EntityNotFoundError se a rota não existir", async () => {
+    const admin = await prisma.administrador.create({
+      data: { name: "Admin", email: "admin@notfound.com", password: "hash" },
+    });
+    const routeRepository = new PrismaRouteRepository(prisma);
+    const updateUseCase = new UpdateRouteUseCase(routeRepository);
+
+    const promise = updateUseCase.execute(9999, {
+      name: "Rota Inexistente",
+      adminId: admin.id,
+    });
+
+    await expect(promise).rejects.toThrow(EntityNotFoundError);
+    await expect(promise).rejects.toThrow("Rota com identificador '9999' não foi encontrado.");
+  }, 30000);
 });
