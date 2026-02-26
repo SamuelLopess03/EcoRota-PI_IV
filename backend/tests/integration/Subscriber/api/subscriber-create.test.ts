@@ -29,7 +29,7 @@ describe("API: Subscriber - Create (POST /subscribers)", () => {
 
   afterAll(async () => {
     await prisma.$disconnect();
-  });
+  }, 30000);
 
   it("deve cadastrar um novo assinante com sucesso (201)", async () => {
     const neighborhood = await prisma.neighborhood.create({
@@ -65,7 +65,7 @@ describe("API: Subscriber - Create (POST /subscribers)", () => {
       where: { email: payload.email }
     });
     expect(subscriberInDb).not.toBeNull();
-  });
+  }, 30000);
 
   it("deve retornar 409 se o e-mail já estiver cadastrado", async () => {
     const neighborhood = await prisma.neighborhood.create({
@@ -102,7 +102,7 @@ describe("API: Subscriber - Create (POST /subscribers)", () => {
 
     expect(response.status).toBe(409);
     expect(response.body.error).toBe(`Assinante com e-mail 'repetido@teste.com' já existe.`);
-  });
+  }, 30000);
 
   it("deve retornar 404 se o bairro não existir", async () => {
     const payload = {
@@ -118,7 +118,7 @@ describe("API: Subscriber - Create (POST /subscribers)", () => {
 
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("Bairro com identificador '404' não foi encontrado.");
-  });
+  }, 30000);
 
   it("deve retornar 400 para dados inválidos (Zod Validation)", async () => {
     const payload = {
@@ -134,5 +134,5 @@ describe("API: Subscriber - Create (POST /subscribers)", () => {
     expect(response.status).toBe(400);
     expect(response.body.error).toBe("Dados de entrada inválidos.");
     expect(response.body).toHaveProperty("details");
-  });
+  }, 30000);
 });

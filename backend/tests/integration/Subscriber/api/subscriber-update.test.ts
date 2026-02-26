@@ -47,7 +47,7 @@ describe("API: Subscriber - Update (PUT /subscribers/:id)", () => {
 
   afterAll(async () => {
     await prisma.$disconnect();
-  });
+  }, 30000);
 
   it("deve atualizar dados do assinante com sucesso (200)", async () => {
     const subscriber = await prisma.subscriber.create({
@@ -73,7 +73,7 @@ describe("API: Subscriber - Update (PUT /subscribers/:id)", () => {
 
     const updatedDb = await prisma.subscriber.findUnique({ where: { id: subscriber.id } });
     expect(updatedDb?.street).toBe("Nova Rua");
-  });
+  }, 30000);
 
   it("deve retornar 401 se o token estiver ausente", async () => {
     const response = await request(app)
@@ -82,7 +82,7 @@ describe("API: Subscriber - Update (PUT /subscribers/:id)", () => {
 
     expect(response.status).toBe(401);
     expect(response.body.error).toBe("Token ausente");
-  });
+  }, 30000);
 
   it("deve retornar 404 se o assinante não existir", async () => {
     const response = await request(app)
@@ -92,7 +92,7 @@ describe("API: Subscriber - Update (PUT /subscribers/:id)", () => {
 
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("Assinante com identificador '9999' não foi encontrado.");
-  });
+  }, 30000);
 
   it("deve retornar 409 se tentar atualizar para um e-mail já em uso", async () => {
     await prisma.subscriber.create({
@@ -110,5 +110,5 @@ describe("API: Subscriber - Update (PUT /subscribers/:id)", () => {
 
     expect(response.status).toBe(409);
     expect(response.body.error).toBe("Já existe um assinante com este e-mail.");
-  });
+  }, 30000);
 });

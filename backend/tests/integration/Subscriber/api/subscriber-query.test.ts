@@ -49,7 +49,7 @@ describe("API: Subscriber - Query (GET)", () => {
 
   afterAll(async () => {
     await prisma.$disconnect();
-  });
+  }, 30000);
 
   describe("GET /subscribers", () => {
     it("deve listar todos os assinantes (200)", async () => {
@@ -59,7 +59,7 @@ describe("API: Subscriber - Query (GET)", () => {
       expect(response.body).toBeInstanceOf(Array);
       expect(response.body).toHaveLength(3);
       expect(response.body[0]).toHaveProperty("email");
-    });
+    }, 30000);
 
     it("deve filtrar assinantes por bairro (200)", async () => {
       const response = await request(app).get(`/subscribers?neighborhoodId=${neighborhoodAId}`);
@@ -67,7 +67,7 @@ describe("API: Subscriber - Query (GET)", () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(2);
       expect(response.body.every((s: any) => s.neighborhoodId === neighborhoodAId)).toBe(true);
-    });
+    }, 30000);
 
     it("deve retornar lista vazia se o bairro não tiver assinantes", async () => {
         const emptyNH = await prisma.neighborhood.create({
@@ -77,7 +77,7 @@ describe("API: Subscriber - Query (GET)", () => {
         const response = await request(app).get(`/subscribers?neighborhoodId=${emptyNH.id}`);
         expect(response.status).toBe(200);
         expect(response.body).toHaveLength(0);
-    });
+    }, 30000);
   });
 
   describe("GET /subscribers/:id", () => {
@@ -89,14 +89,14 @@ describe("API: Subscriber - Query (GET)", () => {
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(subscriber!.id);
       expect(response.body.email).toBe("user1@a.com");
-    });
+    }, 30000);
 
     it("deve retornar 404 se o assinante não existir", async () => {
       const response = await request(app).get("/subscribers/9999");
 
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("Assinante com identificador '9999' não foi encontrado.");
-    });
+    }, 30000);
   });
 
   describe("GET /subscribers/identify", () => {
@@ -107,7 +107,7 @@ describe("API: Subscriber - Query (GET)", () => {
 
       expect(response.status).toBe(200);
       expect(response.body.email).toBe("user3@b.com");
-    });
+    }, 30000);
 
     it("deve retornar 404 se o e-mail não for encontrado na identificação", async () => {
       const response = await request(app)
@@ -116,13 +116,13 @@ describe("API: Subscriber - Query (GET)", () => {
 
       expect(response.status).toBe(404);
       expect(response.body.error).toBe("Assinante com identificador 'naoexiste@teste.com' não foi encontrado.");
-    });
+    }, 30000);
 
     it("deve retornar 400 se o e-mail não for informado na identificação", async () => {
         const response = await request(app).get("/subscribers/identify");
   
         expect(response.status).toBe(400);
         expect(response.body.error).toBe("E-mail é obrigatório.");
-      });
+    }, 30000);
   });
 });

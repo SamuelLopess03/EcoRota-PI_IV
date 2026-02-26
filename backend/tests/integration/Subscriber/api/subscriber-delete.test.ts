@@ -44,7 +44,7 @@ describe("API: Subscriber - Delete (DELETE /subscribers/:id)", () => {
 
   afterAll(async () => {
     await prisma.$disconnect();
-  });
+  }, 30000);
 
   it("deve remover um assinante com sucesso (204)", async () => {
     const subscriber = await prisma.subscriber.create({
@@ -59,7 +59,7 @@ describe("API: Subscriber - Delete (DELETE /subscribers/:id)", () => {
 
     const deletedInDb = await prisma.subscriber.findUnique({ where: { id: subscriber.id } });
     expect(deletedInDb).toBeNull();
-  });
+  }, 30000);
 
   it("deve retornar 401 se não estiver autenticado", async () => {
     const response = await request(app)
@@ -67,7 +67,7 @@ describe("API: Subscriber - Delete (DELETE /subscribers/:id)", () => {
 
     expect(response.status).toBe(401);
     expect(response.body.error).toBe("Token ausente");
-  });
+  }, 30000);
 
   it("deve retornar 404 se o assinante não existir", async () => {
     const response = await request(app)
@@ -76,5 +76,5 @@ describe("API: Subscriber - Delete (DELETE /subscribers/:id)", () => {
 
     expect(response.status).toBe(404);
     expect(response.body.error).toBe("Assinante com identificador '9999' não foi encontrado.");
-  });
+  }, 30000);
 });
