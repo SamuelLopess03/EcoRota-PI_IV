@@ -32,9 +32,9 @@ describe("Integration: UpdateSubscriberProfileUseCase + Prisma (DB real)", () =>
     const route = await prisma.route.create({
       data: {
         name: "Rota Sul",
-        collection_type: "CONVENCIONAL",
-        collection_days: "TER,QUI",
-        collection_time: "14:00",
+        collection_type: "Coleta regular",
+        collection_days: "tuesday,thursday",
+        collection_time: "14:00 - 15:00",
         admin_id_created: admin.id,
       },
     });
@@ -114,9 +114,9 @@ describe("Integration: UpdateSubscriberProfileUseCase + Prisma (DB real)", () =>
     const route = await prisma.route.create({
       data: {
         name: "Route",
-        collection_type: "CONVENCIONAL",
-        collection_days: "SEG",
-        collection_time: "10:00",
+        collection_type: "Coleta regular",
+        collection_days: "monday",
+        collection_time: "10:00 - 11:00",
         admin_id_created: admin.id,
       },
     });
@@ -163,9 +163,9 @@ describe("Integration: UpdateSubscriberProfileUseCase + Prisma (DB real)", () =>
     const route = await prisma.route.create({
       data: {
         name: "R",
-        collection_type: "CONVENCIONAL",
-        collection_days: "S",
-        collection_time: "H",
+        collection_type: "Coleta regular",
+        collection_days: "monday",
+        collection_time: "10:00 - 11:00",
         admin_id_created: admin.id,
       },
     });

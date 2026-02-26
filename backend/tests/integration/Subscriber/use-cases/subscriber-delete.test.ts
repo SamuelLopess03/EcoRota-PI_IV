@@ -31,9 +31,9 @@ describe("Integration: UnsubscribeUseCase + Prisma (DB real)", () => {
     const route = await prisma.route.create({
       data: {
         name: "Rota Sul",
-        collection_type: "CONVENCIONAL",
-        collection_days: "TER,QUI",
-        collection_time: "14:00",
+        collection_type: "Coleta agendada",
+        collection_days: "tuesday,thursday",
+        collection_time: "14:00 - 15:00",
         admin_id_created: admin.id,
       },
     });

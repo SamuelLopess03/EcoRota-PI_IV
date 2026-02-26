@@ -22,9 +22,9 @@ describe("API: Subscriber - Delete (DELETE /subscribers/:id)", () => {
     const route = await prisma.route.create({
       data: {
         name: "Route Test",
-        collection_type: "CONVENCIONAL",
-        collection_days: "SEG",
-        collection_time: "08:00",
+        collection_type: "Coleta regular",
+        collection_days: "monday",
+        collection_time: "08:00 - 09:00",
         admin_id_created: adminId
       }
     });
