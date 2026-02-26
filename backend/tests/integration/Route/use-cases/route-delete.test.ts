@@ -1,11 +1,10 @@
 import { prisma } from "../../../../src/infrastructure/database/prismaClient.js";
 import { PrismaRouteRepository } from "../../../../src/infrastructure/database/prisma/PrismaRouteRepository.js";
-import { PrismaNeighborhoodRepository } from "../../../../src/infrastructure/database/prisma/PrismaNeighborhoodRepository.js";
 import { CreateRouteUseCase } from "../../../../src/application/use-cases/route/CreateRouteUseCase.js";
 import { DeleteRouteUseCase } from "../../../../src/application/use-cases/route/DeleteRouteUseCase.js";
 import { resetDatabase } from "../../../setup-db.js";
 import { EntityNotFoundError } from "../../../../src/domain/errors/persistence/EntityNotFoundError.js";
-import { ConflictError } from "../../../../src/domain/errors/persistence/ConflictError.js";
+import { DependencyError } from "../../../../src/domain/errors/persistence/DependencyError.js";
 
 describe("Integration: DeleteRouteUseCase + Prisma (DB real)", () => {
   beforeAll(async () => {
@@ -30,8 +29,6 @@ describe("Integration: DeleteRouteUseCase + Prisma (DB real)", () => {
     });
 
     const routeRepository = new PrismaRouteRepository(prisma);
-    const neighborhoodRepository = new PrismaNeighborhoodRepository(prisma);
-
     const createUseCase = new CreateRouteUseCase(routeRepository);
 
     const created = await createUseCase.execute({
@@ -43,10 +40,7 @@ describe("Integration: DeleteRouteUseCase + Prisma (DB real)", () => {
       adminId: admin.id,
     });
 
-    const deleteUseCase = new DeleteRouteUseCase(
-      routeRepository,
-      neighborhoodRepository
-    );
+    const deleteUseCase = new DeleteRouteUseCase(routeRepository);
 
     await deleteUseCase.execute(created.id);
 
@@ -59,8 +53,7 @@ describe("Integration: DeleteRouteUseCase + Prisma (DB real)", () => {
 
   it("deve lançar EntityNotFoundError ao excluir rota inexistente", async () => {
     const routeRepository = new PrismaRouteRepository(prisma);
-    const neighborhoodRepository = new PrismaNeighborhoodRepository(prisma);
-    const deleteUseCase = new DeleteRouteUseCase(routeRepository, neighborhoodRepository);
+    const deleteUseCase = new DeleteRouteUseCase(routeRepository);
 
     const promise = deleteUseCase.execute(9999);
 
@@ -68,7 +61,7 @@ describe("Integration: DeleteRouteUseCase + Prisma (DB real)", () => {
     await expect(promise).rejects.toThrow("Rota com identificador '9999' não foi encontrado.");
   }, 30000);
 
-  it("deve lançar ConflictError ao excluir rota com bairros vinculados", async () => {
+  it("deve lançar DependencyError ao excluir rota com bairros vinculados", async () => {
     const admin = await prisma.administrador.create({
       data: { name: "Admin", email: "admin@dep.com", password: "hash" },
     });
@@ -76,8 +69,8 @@ describe("Integration: DeleteRouteUseCase + Prisma (DB real)", () => {
     const route = await prisma.route.create({
       data: {
         name: "Rota com Bairro",
-        collection_type: "REGULAR",
-        collection_days: "MON",
+        collection_type: "Coleta regular",
+        collection_days: "monday",
         collection_time: "08:00 - 10:00",
         admin_id_created: admin.id,
       },
@@ -95,14 +88,13 @@ describe("Integration: DeleteRouteUseCase + Prisma (DB real)", () => {
     });
 
     const routeRepository = new PrismaRouteRepository(prisma);
-    const neighborhoodRepository = new PrismaNeighborhoodRepository(prisma);
-    const deleteUseCase = new DeleteRouteUseCase(routeRepository, neighborhoodRepository);
+    const deleteUseCase = new DeleteRouteUseCase(routeRepository);
 
     const promise = deleteUseCase.execute(route.id);
 
-    await expect(promise).rejects.toThrow(ConflictError);
+    await expect(promise).rejects.toThrow(DependencyError);
     await expect(promise).rejects.toThrow(
-      `Não é possível deletar a rota ${route.id} pois ela possui bairros vinculados.`
+      "Não é possível excluir esta rota pois existem bairros vinculados a ela."
     );
   }, 30000);
 });

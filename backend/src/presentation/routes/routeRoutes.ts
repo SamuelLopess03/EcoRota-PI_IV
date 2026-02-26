@@ -24,7 +24,7 @@ const createRouteUseCase = new CreateRouteUseCase(routeRepository);
 const listRoutesUseCase = new ListRoutesUseCase(routeRepository);
 const findRouteByIdUseCase = new FindRouteByIdUseCase(routeRepository, neighborhoodRepository);
 const updateRouteUseCase = new UpdateRouteUseCase(routeRepository);
-const deleteRouteUseCase = new DeleteRouteUseCase(routeRepository, neighborhoodRepository);
+const deleteRouteUseCase = new DeleteRouteUseCase(routeRepository);
 
 const routeController = new RouteController(
     createRouteUseCase,
