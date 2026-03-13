@@ -46,15 +46,15 @@ jobs:
         run: npx prisma generate
         working-directory: backend
         env:
-          DATABASE_URL: "mysql://root:root@localhost:3306/ecorota_test"
+          DATABASE_URL: "mysql://root:root@localhost:3306/ecorota_test?connection_limit=50&pool_timeout=20"
 
       - name: Run Build (Type-check)
         run: npm run build
         working-directory: backend
 
       - name: Run Tests
-        run: npm test
+        run: npm test -- --runInBand
         working-directory: backend
         env:
-          DATABASE_URL: "mysql://root:root@localhost:3306/ecorota_test"
+          DATABASE_URL: "mysql://root:root@localhost:3306/ecorota_test?connection_limit=50&pool_timeout=20"
           JWT_SECRET: "test-secret"
